@@ -9,7 +9,7 @@
  */
 var LoadProgress = function(){
     var cte = document.createElement('div');
-    cte.style.cssText = 'position:fixed;top:1%;right:1%;cursor:pointer;opacity:0.9;z-index:10000';
+    cte.style.cssText = 'position:fixed;bottom:10px;left:10px;cursor:pointer;opacity:0.9;z-index:10000';
     return{
         dom:cte,
         onProgress:function(xhr){

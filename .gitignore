@@ -1,3 +1,8 @@
 #ignore
-node_modules
 test
+js
+data
+mapall
+textureAll
+#node
+node_modules
