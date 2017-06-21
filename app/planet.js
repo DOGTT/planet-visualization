@@ -252,20 +252,29 @@ var Planet = function(){
         universeCamera.rotation.copy( camera.rotation );
         renderer.render(universeScene,universeCamera);
         
-        var lengthCam = camera.position.length();
-        scene.fog.far = lengthCam;
-        scene.fog.near = lengthCam - (planetR/2);
 
         renderer.autoClear = false;
         raycasterRender();
         lodRender();
- 
+        fogContorl();
         spangleStar();
-
         ProssRT();
         
         renderer.render(scene,camera);
         //renderer.clearColor ();
+    }
+    function fogContorl(){
+        var lengthCam = camera.position.length();
+        if(lengthCam>10){
+            scene.fog.far = lengthCam;
+            scene.fog.near = lengthCam - (planetR/2);
+        }else{
+            scene.fog.near = 1;
+            scene.fog.far = 1000;
+        }
+
+        //var lib = THREE.ShaderLib[ "phong" ];
+        //console.log(lib);
     }
     function lodRender(){
         scene.traverse(
