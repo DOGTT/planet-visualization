@@ -12,6 +12,7 @@ var Planet = function(){
         autoRotate:false,
     }
     var planetR = 1.0;
+    var cameraPosR = 14;
     var PI = Math.PI;
     var planetCenter = new THREE.Vector3(0,0,0);
     var container,camera,scene,renderer;
@@ -45,7 +46,7 @@ var Planet = function(){
         loadUniverseText();
         //scene
         scene = new THREE.Scene();
-        scene.fog = new THREE.Fog(0x6ec1ff,13.5,14);//0xf2f7ff
+        scene.fog = new THREE.Fog(0x6ec1ff,cameraPosR-(planetR/2),cameraPosR);//0xf2f7ff
         universeScene = new THREE.Scene();
         sceneForRT = new THREE.Scene();
         
@@ -248,6 +249,7 @@ var Planet = function(){
         rotationForY(sunLight,0.002);
         universeCamera.rotation.copy( camera.rotation );
         renderer.render(universeScene,universeCamera);
+        //scene.fog.near = camera.position
         renderer.autoClear = false;
         raycasterRender();
         lodRender();
