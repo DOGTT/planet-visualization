@@ -13,6 +13,7 @@ var Planet = function(){
     }
     var planetR = 1.0;
     var cameraPosR = 14;
+    var sunLightPower = 25;
     var PI = Math.PI;
     var planetCenter = new THREE.Vector3(0,0,0);
     var container,camera,scene,renderer;
@@ -52,7 +53,7 @@ var Planet = function(){
         
         //camera
         camera = new THREE.PerspectiveCamera(10,viewSize.x/viewSize.y,1,2000);
-        camera.position.set(0,0,-14);
+        camera.position.set(0,0,-cameraPosR);
         camera.lookAt(new THREE.Vector3(0,0,0));
         scene.add(camera);
         //cameraForRT.copy(camera);
@@ -63,9 +64,9 @@ var Planet = function(){
         //light
         var ambient = new THREE.AmbientLight( 0xcccccc );
 		scene.add( ambient );
-        sunLight = new THREE.PointLight(0xffffff,1,50);
+        sunLight = new THREE.PointLight(0xffffff,1,sunR*10);
         sunLight.position.set(sunR,sunR,-sunR);
-        sunLight.power = 25;
+        sunLight.power = sunLightPower;
         scene.add( sunLight );
 
         //make a planet
