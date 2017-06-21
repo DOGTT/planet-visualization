@@ -14,6 +14,7 @@ var Planet = function(){
     var planetR = 1.0;
     var cameraPosR = 14;
     var sunLightPower = 25;
+    var colorPlant = 0x6ec1ff;
     var PI = Math.PI;
     var planetCenter = new THREE.Vector3(0,0,0);
     var container,camera,scene,renderer;
@@ -47,10 +48,10 @@ var Planet = function(){
         loadUniverseText();
         //scene
         scene = new THREE.Scene();
-        scene.fog = new THREE.Fog(0x6ec1ff,cameraPosR-(planetR/2),cameraPosR);//0xf2f7ff
         universeScene = new THREE.Scene();
         sceneForRT = new THREE.Scene();
-        
+        scene.fog = new THREE.Fog(colorPlant,cameraPosR-(planetR/2),cameraPosR);//0xf2f7ff
+       
         //camera
         camera = new THREE.PerspectiveCamera(10,viewSize.x/viewSize.y,1,2000);
         camera.position.set(0,0,-cameraPosR);
@@ -161,12 +162,11 @@ var Planet = function(){
         planetGeo = new THREE.SphereGeometry(1,200,100);
         //planetMat = new THREE.MeshBasicMaterial({color:0xffffff,wireframe:true});
         planetMat = new THREE.MeshPhongMaterial({
-            color:0xffffff,
+            color:colorPlant,
             shininess:50
         });
         planetMesh = new THREE.Mesh(planetGeo,planetMat);
         cloudsMat = new THREE.MeshLambertMaterial( {
-					color: 0xffffff,
 					blending: THREE.NormalBlending,
 					transparent: true,
 					depthTest: false
@@ -183,6 +183,7 @@ var Planet = function(){
         loader.setPath('textures/planet/');
         loader.load('006.jpg',function(tex){
             planetMat.map = tex;
+            planetMat.color.set(0xffffff);
             planetMat.needsUpdate = true;
         },loadP.onProgress,loadP.onError);
          loader.load('earth_specular_2048.jpg',function(tex){
@@ -250,7 +251,11 @@ var Planet = function(){
         rotationForY(sunLight,0.002);
         universeCamera.rotation.copy( camera.rotation );
         renderer.render(universeScene,universeCamera);
-        //scene.fog.near = camera.position
+        
+        var lengthCam = camera.position.length();
+        scene.fog.far = lengthCam;
+        scene.fog.near = lengthCam - (planetR/2);
+
         renderer.autoClear = false;
         raycasterRender();
         lodRender();
