@@ -8,8 +8,11 @@ var Planet = function(){
     function LoLa(){this.lo=null;this.la=null;this.loF=null;this.laF=null,this.valid=false};
     var params_control = {
         cloudShow:false,
+        textShow:false,
+        nameShow:false,
         lolaLinesShow:true,
         autoRotate:false,
+        renderQuality:[low,middle,high]
     }
     var planetR = 1.0;
     var cameraPosR = 14;

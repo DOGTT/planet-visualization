@@ -8,7 +8,7 @@ var Contorl = function(){
     var mouse = new THREE.Vector2();
     var paramC = {
             RayMarching:false
-        };
+    };
     var objName = {
         rayMarch:'raymarching'
     }
@@ -45,15 +45,15 @@ var Contorl = function(){
         gui.add( paramC, 'RayMarching' ).onChange(paramOnChange);
         //planet.setParams(params);
         gui.open();
-        var cdsac = new THREE.BoxGeometry(0.01,0.01,0.01 );
-		var cdaca = new THREE.MeshBasicMaterial( {wireframe:true} );
-        var lons = 100,lats = 0;
-        for(var i = 0;i<50;i++){
-            for(var j = 0;j<40;j++){
-            var cs = new THREE.Mesh(cdsac,cdaca);
-                planet.addMesh(cs,'test',lons + j*0.8,lats + i*0.8,0.2);
-            }
-        }
+        // var cdsac = new THREE.BoxGeometry(0.01,0.01,0.01 );
+		// var cdaca = new THREE.MeshBasicMaterial( {wireframe:true} );
+        // var lons = 100,lats = 0;
+        // for(var i = 0;i<50;i++){
+        //     for(var j = 0;j<40;j++){
+        //     var cs = new THREE.Mesh(cdsac,cdaca);
+        //         planet.addMesh(cs,'test',lons + j*0.8,lats + i*0.8,0.2);
+        //     }
+        // }
          
     }
     function mapLoad(){
