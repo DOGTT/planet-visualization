@@ -455,6 +455,7 @@ var Planet = function(){
         return mapG;
 
     }
+     
     return {
         /**
          * @param 

@@ -110,3 +110,6 @@ function drawAxes(length) {
     rG.add(zAxis);
     return rG;
 }
+function Point2Point(p1,p2){
+    
+}
