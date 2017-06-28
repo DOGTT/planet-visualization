@@ -110,6 +110,43 @@ function drawAxes(length) {
     rG.add(zAxis);
     return rG;
 }
+
 function Point2Point(p1,p2){
+    var R = 1.0;
+    var H = 0.4;
+    var pointN = 10; 
+    var pO = new THREE.Vector3((p1.x+p2.x)/2,(p1.y+p2.y)/2,(p1.z+p2.z)/2);
+    var L = Math.sqrt(Math.pow(p1.x-p2.x,2)+Math.pow(p1.y-p2.x,y)+Math.pow(p1.z-p2.z,2));
+    //P*y = x^2
+    var P = Math.pow(L,2)/(4*H);
+    var arr = new Array();
+    arr.push(p1);
+    for(let i = 0;i<pointN;i++){
+
+    }
+
+}
+function rotation(p1,p2,I){
     
+    var angO = Math.acos((p1.x * p2.x + p1.y * p2.y + p1.z * p2.z)/1/1);
+    var ang = angO*I;
+    var temp = new THREE.Vector3(0,0,0);
+    var modt,angt;
+    //x
+    modt = Math.sqrt(p1.y*p1.y+p2.z*p2.z)*Math.sqrt(p1.y*p1.y+p2.z*p2.z);
+    angt = Math.acos(( p1.y * p2.y + p1.z * p2.z)/modx)*I;
+    temp.y += R*Math.sin(angt);
+    temp.z += R*Math.cos(angt);
+    //y
+    modt = Math.sqrt(p1.x*p1.x+p2.z*p2.z)*Math.sqrt(p1.x*p1.x+p2.z*p2.z);
+    angt = Math.acos(( p1.x * p2.x + p1.z * p2.z)/modx)*I;
+    temp.y += R*Math.sin(angt);
+    temp.z += R*Math.cos(angt);
+    //z
+    modt = Math.sqrt(p1.y*p1.y+p2.z*p2.z)*Math.sqrt(p1.y*p1.y+p2.z*p2.z);
+    angt = Math.acos(( p1.y * p2.y + p1.z * p2.z)/modx)*I;
+    temp.y += R*Math.sin(angt);
+    temp.z += R*Math.cos(angt);
+
+    vec.push(temp);
 }

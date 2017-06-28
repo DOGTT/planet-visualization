@@ -12,7 +12,7 @@ var Planet = function(){
         nameShow:false,
         lolaLinesShow:true,
         autoRotate:false,
-        renderQuality:[low,middle,high]
+        renderQuality:0
     }
     var planetR = 1.0;
     var cameraPosR = 14;
