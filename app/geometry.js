@@ -111,42 +111,44 @@ function drawAxes(length) {
     return rG;
 }
 
+//球面两点连线 球的中心为原点
 function Point2Point(p1,p2){
     var R = 1.0;
-    var H = 0.4;
-    var pointN = 10; 
+    var H = 0.8;
+    var pointN = 20; 
     var pO = new THREE.Vector3((p1.x+p2.x)/2,(p1.y+p2.y)/2,(p1.z+p2.z)/2);
-    var L = Math.sqrt(Math.pow(p1.x-p2.x,2)+Math.pow(p1.y-p2.x,y)+Math.pow(p1.z-p2.z,2));
+    var M = pO.length();
+    var L = Math.sqrt(Math.pow(p1.x-p2.x,2)+Math.pow(p1.y-p2.y,2)+Math.pow(p1.z-p2.z,2));
+    var Lhalf = L/2;
     //P*y = x^2
     var P = Math.pow(L,2)/(4*H);
     var arr = new Array();
     arr.push(p1);
+    var lt = L/pointN;
+    var tx = Lhalf,ty=0;
     for(let i = 0;i<pointN;i++){
-
+        tx = tx - lt;
+        ty = (tx*tx)/P;
+        var bl = (M/(M+H-ty));
+        var x0 = tx *bl;
+        var I = (Lhalf- x0)/L;
+        var Pointt =rotation(p1,p2,I);
+        arr.push(sufang(Pointt,1/bl));
     }
-
+     arr.push(p2);
+    return arr;
+}
+function sufang(p,v){
+    var temp = new THREE.Vector3(0,0,0);
+    temp.x = p.x *v;
+    temp.y = p.y *v;
+    temp.z = p.z *v;
+    return temp;
 }
 function rotation(p1,p2,I){
-    
-    var angO = Math.acos((p1.x * p2.x + p1.y * p2.y + p1.z * p2.z)/1/1);
-    var ang = angO*I;
     var temp = new THREE.Vector3(0,0,0);
-    var modt,angt;
-    //x
-    modt = Math.sqrt(p1.y*p1.y+p2.z*p2.z)*Math.sqrt(p1.y*p1.y+p2.z*p2.z);
-    angt = Math.acos(( p1.y * p2.y + p1.z * p2.z)/modx)*I;
-    temp.y += R*Math.sin(angt);
-    temp.z += R*Math.cos(angt);
-    //y
-    modt = Math.sqrt(p1.x*p1.x+p2.z*p2.z)*Math.sqrt(p1.x*p1.x+p2.z*p2.z);
-    angt = Math.acos(( p1.x * p2.x + p1.z * p2.z)/modx)*I;
-    temp.y += R*Math.sin(angt);
-    temp.z += R*Math.cos(angt);
-    //z
-    modt = Math.sqrt(p1.y*p1.y+p2.z*p2.z)*Math.sqrt(p1.y*p1.y+p2.z*p2.z);
-    angt = Math.acos(( p1.y * p2.y + p1.z * p2.z)/modx)*I;
-    temp.y += R*Math.sin(angt);
-    temp.z += R*Math.cos(angt);
-
-    vec.push(temp);
+    temp.x = (p2.x - p1.x )*I + p1.x;
+    temp.y = (p2.y - p1.y )*I + p1.y;
+    temp.z = (p2.z - p1.z )*I + p1.z;
+    return temp;
 }

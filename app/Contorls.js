@@ -54,7 +54,8 @@ var Contorl = function(){
         //         planet.addMesh(cs,'test',lons + j*0.8,lats + i*0.8,0.2);
         //     }
         // }
-         
+
+        //console.log();
     }
     function mapLoad(){
         var filename = "china-provinces.json";//world-50m

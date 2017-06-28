@@ -100,20 +100,32 @@ var Planet = function(){
         stats = new Stats();
         container.appendChild(stats.dom);
         scene.add(drawAxes(2));
-    }
-    // function test(){
+test();
 
-    //      var   group = new THREE.Group();
-    //     scene.add( group );
-    //     var cdsac = new THREE.SphereGeometry(0.01 );
-	// 	var cdaca = new THREE.MeshBasicMaterial( {color:0xff0000} );
-    //     var cs2 = new THREE.Mesh(cdsac,cdaca);
-    //     cs2.position.copy(LoLaconvertToXYZ(new THREE.Vector2(117.5,22.35)));
-    //     scene.add(cs2);
-    //     var cs3 = new THREE.Mesh(cdsac,cdaca);
-    //     scene.add(cs3);
-    //     //planetMesh.visible = false;
-    // }
+    }
+    function test(){
+                var p1 = new THREE.Vector3(0,Math.sqrt(0.75),0.5);
+        var p2 = new THREE.Vector3(-0.5,Math.sqrt(0.75),0);
+        var material = new THREE.LineBasicMaterial({
+            color: 0x0000ff
+        });
+        var geometry = new THREE.Geometry();
+        geometry.vertices = Point2Point(p1,p2);
+        console.log(Point2Point(p1,p2));
+        var line = new THREE.Line( geometry, material );
+        scene.add(line);
+        planetMesh.visible = false;
+        //  var   group = new THREE.Group();
+        // scene.add( group );
+        // var cdsac = new THREE.SphereGeometry(0.01 );
+		// var cdaca = new THREE.MeshBasicMaterial( {color:0xff0000} );
+        // var cs2 = new THREE.Mesh(cdsac,cdaca);
+        // cs2.position.copy(LoLaconvertToXYZ(new THREE.Vector2(117.5,22.35)));
+        // scene.add(cs2);
+        // var cs3 = new THREE.Mesh(cdsac,cdaca);
+        // scene.add(cs3);
+        // //planetMesh.visible = false;
+    }
 
 
     function next(){
