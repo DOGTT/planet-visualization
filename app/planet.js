@@ -521,6 +521,8 @@ test();
            mouse = v; 
         },
         pointerLoLa:pointerLoLa,
-        container:container
+        container:container,
+        LoLa:LoLa
     }
+    //exports.Vector3 = Vector3;
 };

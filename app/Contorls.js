@@ -45,6 +45,7 @@ var Contorl = function(){
         gui.add( paramC, 'RayMarching' ).onChange(paramOnChange);
         //planet.setParams(params);
         gui.open();
+        console.log(new planet.LoLa(12,32));
         // var cdsac = new THREE.BoxGeometry(0.01,0.01,0.01 );
 		// var cdaca = new THREE.MeshBasicMaterial( {wireframe:true} );
         // var lons = 100,lats = 0;
