@@ -104,7 +104,7 @@ test();
 
     }
     function test(){
-                var p1 = new THREE.Vector3(1.20,Math.sqrt(0.75),0.8);
+                var p1 = new THREE.Vector3(0,0,0);
         var p2 = new THREE.Vector3(-0.5,Math.sqrt(0.75),0.5);
         var material = new THREE.LineBasicMaterial({
             color: 0x0000ff

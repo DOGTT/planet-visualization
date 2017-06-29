@@ -110,12 +110,19 @@ function drawAxes(length) {
     rG.add(zAxis);
     return rG;
 }
-
-//球面两点连线 球的中心为原点
-function Point2Point(p1,p2){
-    var R = 1.0;
-    var H = 0.8;
-    var pointN = 20; 
+/**
+ * Two connections create a parabola
+ * Center of parabola is(0,0,0)
+ * @param {p1} the point of start (Vector3) 
+ * @param {p2} the point of end (Vector3) 
+ * @param {height} the height of parabola
+ * @param {N} the number of the point made 
+ */
+function PointToPoint(p1,p2,height,N){
+    //var R = 1.0;
+    var H = height!== undefined ? height:0.5,
+        pointN = N!== undefined ? N:10;
+    
     var pO = new THREE.Vector3((p1.x+p2.x)/2,(p1.y+p2.y)/2,(p1.z+p2.z)/2);
     var M = pO.length();
     var L = Math.sqrt(Math.pow(p1.x-p2.x,2)+Math.pow(p1.y-p2.y,2)+Math.pow(p1.z-p2.z,2));
