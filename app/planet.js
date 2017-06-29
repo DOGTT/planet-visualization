@@ -5,7 +5,12 @@
 var Planet = function(){
     'use strict';
     if(!Detector.webgl) Detector.addGetWebGLMessage();
-    function LoLa(){this.lo=null;this.la=null;this.loF=null;this.laF=null,this.valid=false};
+    function LoLa(lo,la){
+        this.lo=lo;this.la=la;
+        //the description of lalo
+        this.loF=null;this.laF=null;
+        this.valid=false;
+    };
     var params_control = {
         cloudShow:false,
         textShow:false,
@@ -110,8 +115,8 @@ test();
             color: 0x0000ff
         });
         var geometry = new THREE.Geometry();
-        geometry.vertices = Point2Point(p1,p2);
-        console.log(Point2Point(p1,p2));
+        geometry.vertices = PointToPoint(p1,p2);
+        console.log(PointToPoint(p1,p2));
         var line = new THREE.Line( geometry, material );
         scene.add(line);
         planetMesh.visible = false;
@@ -339,8 +344,8 @@ test();
         }
         pointerLoLa.valid = true;
         var t = UVconvertTOLoLa(O);
-        var tx = t.x;
-        var ty = t.y;
+        var tx = t.lo;
+        var ty = t.la;
         var N='北纬N',S='南纬S',W='西经W',E='东经E';
         if(tx<0) pointerLoLa.loF = W + Math.abs(tx);
         else pointerLoLa.loF = E + tx;
@@ -350,33 +355,33 @@ test();
         pointerLoLa.la = ty;
     }
     function UVconvertTOLoLa(O){
-        var t = new THREE.Vector2();
-        t.x = (O.x * 360.0 - 180.0).toFixed(4);
-        t.y = (O.y * 180.0 - 90.0).toFixed(4);
+        var t = new LoLa();
+        t.lo = (O.x * 360.0 - 180.0).toFixed(4);
+        t.la= (O.y * 180.0 - 90.0).toFixed(4);
         return t;
     }
     function LoLaconvertTUV(lola){
         var t = new THREE.Vector2();
-        t.x = ( lola.x +180.0) /360.0;
-        t.y = ( lola.y +90.0) /180.0;
+        t.x = ( lola.lo +180.0) /360.0;
+        t.y = ( lola.la +90.0) /180.0;
         return t;
     }
-    function LoLaconvertToXYZ(uv){
-        var u = uv.x/180.0;
-        var v = uv.y/180.0;
+    function LoLaconvertToXYZ(lola){
+        var lo = lola.lo/180.0;
+        var la = lola.la/180.0;
         var r = planetR;
         var pos = new THREE.Vector3();
-        pos.y = r*(Math.sin((v)*PI));
-        var t_u;
-        if(u<-0.5||u>0.5);
-            t_u = 1.0 - Math.abs(u);
+        pos.y = r*(Math.sin((la)*PI));
+        var t_lo;
+        if(lo<-0.5||lo>0.5);
+            t_lo = 1.0 - Math.abs(lo);
         
-        var t = Math.tan((t_u)*PI);
+        var t = Math.tan((t_lo)*PI);
 
         pos.x = Math.sqrt((1.0-pos.y*pos.y)/(t*t + 1.0));
         pos.z = Math.sqrt(1.0 - pos.x*pos.x - pos.y*pos.y);
-        if(u<-0.5||u>0.5) pos.x = 0.0 - pos.x;
-        if(u> 0.0) pos.z = 0.0 - pos.z;
+        if(lo<-0.5||lo>0.5) pos.x = 0.0 - pos.x;
+        if(lo> 0.0) pos.z = 0.0 - pos.z;
         if(Math.abs(pos.x) <0.00001) pos.x = 0;
         return pos;
     }
@@ -385,20 +390,20 @@ test();
         var y = position.y;
         var z = position.z;
         var r = planetR;
-        var rt = new THREE.Vector2();
-        rt.x = Math.abs(Math.atan(z/x)/PI);
-        if(x < 0.0 ) rt.x = (1.0 - rt.x); 
-        if(z > 0.0 ) rt.x = 0.0-rt.x;
+        var rt = new LoLa();
+        rt.lo = Math.abs(Math.atan(z/x)/PI);
+        if(x < 0.0 ) rt.lo = (1.0 - rt.lo); 
+        if(z > 0.0 ) rt.lo = 0.0-rt.lo;
         
-        rt.y = Math.asin(y/r)/PI;      
-        if(isNaN(rt.x)) rt.x = y;
-        rt.x *= 180.0;
-        rt.y *= 180.0;
+        rt.la = Math.asin(y/r)/PI;      
+        if(isNaN(rt.x)) rt.lo = y;
+        rt.lo *= 180.0;
+        rt.la *= 180.0;
         return rt;
     }
     function positionMesh(mesh,lo,la,height){
         var height = height!== undefined ? height:0;
-        var pos = LoLaconvertToXYZ(new THREE.Vector2(lo,la));
+        var pos = LoLaconvertToXYZ(new LoLa(lo,la));
         var sacl = 1.0 + height;
         mesh.position.set(pos.x*sacl,pos.y*sacl,pos.z*sacl);
         //mesh.lookAt(new THREE.Vector3(0,0,0));   
@@ -427,7 +432,7 @@ test();
         var vec = new Array();
         var t;
         for(var i=0;i<arrs.length;i++){
-            t = LoLaconvertToXYZ(new THREE.Vector2(arrs[i][0],arrs[i][1]));
+            t = LoLaconvertToXYZ(new LoLa(arrs[i][0],arrs[i][1]));
             if(R !== undefined){
                 for(var v in t) t[v] *= R;
             }
@@ -486,6 +491,9 @@ test();
         },
         addRenderTarget:function(rt,name){
             renderTargets[name] = rt;
+        },
+        addLines:function(p1,p2){
+
         },
         romoveMesh:function(name){   
             scene.remove(scene.getObjectByName(name));
