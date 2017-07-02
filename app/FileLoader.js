@@ -5,7 +5,7 @@
 'use strict';
 /**
  * @author tide_h 
- * loader
+ * loader need fixed
  */
 var FileLoader = function(){
     var fShader,vShader;
