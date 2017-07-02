@@ -6,6 +6,8 @@
 /**
  * @author tide_h 
  * loader need fixed
+ * 
+ * 
  */
 var FileLoader = function(){
     var fShader,vShader;
