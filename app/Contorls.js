@@ -1,6 +1,7 @@
 /**
  * @author tide_h 
  * Contorl part
+ * need update
  */
 var Contorl = function(){
     'use strict';
