@@ -47,6 +47,8 @@ var Contorl = function(){
         //planet.setParams(params);
         gui.open();
         console.log(new planet.LoLa(12,32));
+        planet.addLines(new planet.LoLa(12,32),new planet.LoLa(34,-32));
+        planet.addLines(new planet.LoLa(32,0.4),new planet.LoLa(-59,85));
         // var cdsac = new THREE.BoxGeometry(0.01,0.01,0.01 );
 		// var cdaca = new THREE.MeshBasicMaterial( {wireframe:true} );
         // var lons = 100,lats = 0;

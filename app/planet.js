@@ -109,7 +109,7 @@ test();
 
     }
     function test(){
-                var p1 = new THREE.Vector3(0,0,0);
+        var p1 = new THREE.Vector3(0,0,0);
         var p2 = new THREE.Vector3(-0.5,Math.sqrt(0.75),0.5);
         var material = new THREE.LineBasicMaterial({
             color: 0x0000ff
@@ -119,7 +119,7 @@ test();
         console.log(PointToPoint(p1,p2));
         var line = new THREE.Line( geometry, material );
         scene.add(line);
-        planetMesh.visible = false;
+       // planetMesh.visible = false;
         //  var   group = new THREE.Group();
         // scene.add( group );
         // var cdsac = new THREE.SphereGeometry(0.01 );
@@ -131,7 +131,18 @@ test();
         // scene.add(cs3);
         // //planetMesh.visible = false;
     }
-
+    function addLine(p1,p2){
+        var p1 = LoLaconvertToXYZ(p1);
+        var p2 = LoLaconvertToXYZ(p2);
+         var material = new THREE.LineBasicMaterial({
+            color: 0x0000ff
+        });
+        var geometry = new THREE.Geometry();
+        geometry.vertices = PointToPoint(p1,p2);
+        console.log(PointToPoint(p1,p2));
+        var line = new THREE.Line( geometry, material );
+        scene.add(line);
+    }
 
     function next(){
         makeUniverse();
@@ -493,7 +504,7 @@ test();
             renderTargets[name] = rt;
         },
         addLines:function(p1,p2){
-            
+            addLine(p1,p2);
         },
         romoveMesh:function(name){   
             scene.remove(scene.getObjectByName(name));
