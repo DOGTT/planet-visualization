@@ -493,7 +493,7 @@ test();
             renderTargets[name] = rt;
         },
         addLines:function(p1,p2){
-
+            
         },
         romoveMesh:function(name){   
             scene.remove(scene.getObjectByName(name));
@@ -527,5 +527,5 @@ test();
     //exports.Vector3 = Vector3;
 
 
-    
+
 };
