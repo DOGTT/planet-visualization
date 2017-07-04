@@ -27,7 +27,13 @@ var Planet = function(configP){
         cameraPosR:14,
         sunLightPower:25,
         colorPlant:0x6ec1ff,
-        sunR :5
+        sunR :5,
+        DirectionText:{
+            N:'北纬N',
+            S:'南纬S',
+            W:'西经W',
+            E:'东经E'
+        }
     };
     var config = config_default;
     if(configP!==undefined){
@@ -133,7 +139,7 @@ var Planet = function(configP){
         console.log(PointToPoint(p1,p2));
         var line = new THREE.Line( geometry, material );
         scene.add(line);
-       planetMesh.visible = false;
+        //planetMesh.visible = false;
         //  var   group = new THREE.Group();
         // scene.add( group );
         // var cdsac = new THREE.SphereGeometry(0.01 );
@@ -371,7 +377,7 @@ var Planet = function(configP){
         var t = UVconvertTOLoLa(O);
         var tx = t.lo;
         var ty = t.la;
-        var N='北纬N',S='南纬S',W='西经W',E='东经E';
+        var N=config.DirectionText.N||'N',S=config.DirectionText.S||'S',W=config.DirectionText.W||'W',E=config.DirectionText.E||'E';
         if(tx<0) pointerLoLa.loF = W + Math.abs(tx);
         else pointerLoLa.loF = E + tx;
         if(ty<0) pointerLoLa.laF = S + Math.abs(ty);
