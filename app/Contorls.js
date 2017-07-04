@@ -48,7 +48,7 @@ var Contorl = function(){
         gui.open();
         console.log(new planet.LoLa(12,32));
         planet.addLines(new planet.LoLa(12,32),new planet.LoLa(34,-32));
-        for(var i = 0;i<5000;i++){
+        for(var i = 0;i<5;i++){
             var s1=Math.random()-0.5;
              var s2=Math.random()-0.5;
             var e1 = Math.random()-0.5;

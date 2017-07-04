@@ -2,6 +2,9 @@
  * @author tide_h
  * make a planet 
  */
+
+
+
 var Planet = function(){
     'use strict';
     if(!Detector.webgl) Detector.addGetWebGLMessage();
@@ -105,7 +108,7 @@ var Planet = function(){
         stats = new Stats();
         container.appendChild(stats.dom);
         scene.add(drawAxes(2));
-test();
+        test();
 
     }
     function test(){
