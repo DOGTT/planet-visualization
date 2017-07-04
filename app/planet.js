@@ -5,27 +5,40 @@
 
 
 
-var Planet = function(){
+var Planet = function(configP){
     'use strict';
     if(!Detector.webgl) Detector.addGetWebGLMessage();
+
     function LoLa(lo,la){
         this.lo=lo;this.la=la;
         //the description of lalo
         this.loF=null;this.laF=null;
         this.valid=false;
-    };
-    var params_control = {
+    }
+    var config_default = {
         cloudShow:false,
         textShow:false,
         nameShow:false,
         lolaLinesShow:true,
         autoRotate:false,
-        renderQuality:0
-    }
+        renderQuality:0,
+        //basic
+        planetR:1.0,
+        cameraPosR:14,
+        sunLightPower:25,
+        colorPlant:0x6ec1ff,
+        sunR :5
+    };
+    var config = {
+
+    }config_params!==undefined?config_params:config_default;
+
     var planetR = 1.0;
     var cameraPosR = 14;
     var sunLightPower = 25;
     var colorPlant = 0x6ec1ff;
+    var sunR = 5;
+    var sunLight;
     var PI = Math.PI;
     var planetCenter = new THREE.Vector3(0,0,0);
     var container,camera,scene,renderer;
@@ -36,7 +49,7 @@ var Planet = function(){
     var universeCamera,universeScene;
     var universeMesh,universeMat,universeGeo;
     var loLaLineLod;
-    var sunLight,sunR = 5;
+    
     var i,j;
     var mouse = new THREE.Vector2();
     var raycaster,intersects,pointerMesh;
