@@ -48,7 +48,13 @@ var Contorl = function(){
         gui.open();
         console.log(new planet.LoLa(12,32));
         planet.addLines(new planet.LoLa(12,32),new planet.LoLa(34,-32));
-        planet.addLines(new planet.LoLa(32,0.4),new planet.LoLa(-59,85));
+        for(var i = 0;i<5000;i++){
+            var s1=Math.random()-0.5;
+             var s2=Math.random()-0.5;
+            var e1 = Math.random()-0.5;
+            var e2 = Math.random()-0.5;
+        planet.addLines(new planet.LoLa(s1*360,s2*180),new planet.LoLa(e1*360,e2*180));
+         }
         // var cdsac = new THREE.BoxGeometry(0.01,0.01,0.01 );
 		// var cdaca = new THREE.MeshBasicMaterial( {wireframe:true} );
         // var lons = 100,lats = 0;

@@ -119,7 +119,7 @@ test();
         console.log(PointToPoint(p1,p2));
         var line = new THREE.Line( geometry, material );
         scene.add(line);
-       // planetMesh.visible = false;
+       planetMesh.visible = false;
         //  var   group = new THREE.Group();
         // scene.add( group );
         // var cdsac = new THREE.SphereGeometry(0.01 );
