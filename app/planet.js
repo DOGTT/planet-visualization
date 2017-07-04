@@ -29,15 +29,13 @@ var Planet = function(configP){
         colorPlant:0x6ec1ff,
         sunR :5
     };
-    var config = {
-
-    }config_params!==undefined?config_params:config_default;
-
-    var planetR = 1.0;
-    var cameraPosR = 14;
-    var sunLightPower = 25;
-    var colorPlant = 0x6ec1ff;
-    var sunR = 5;
+    var config = config_default;
+    if(configP!==undefined){
+        for(let item in configP){
+            config[item] = configP[item];
+        }
+    }
+    
     var sunLight;
     var PI = Math.PI;
     var planetCenter = new THREE.Vector3(0,0,0);
@@ -74,11 +72,11 @@ var Planet = function(configP){
         scene = new THREE.Scene();
         universeScene = new THREE.Scene();
         sceneForRT = new THREE.Scene();
-        scene.fog = new THREE.Fog(colorPlant,cameraPosR-(planetR/2),cameraPosR);//0xf2f7ff
+        scene.fog = new THREE.Fog(config.colorPlant,config.cameraPosR-(config.planetR/2),config.cameraPosR);//0xf2f7ff
        
         //camera
         camera = new THREE.PerspectiveCamera(10,viewSize.x/viewSize.y,1,2000);
-        camera.position.set(0,0,-cameraPosR);
+        camera.position.set(0,0,-config.cameraPosR);
         camera.lookAt(new THREE.Vector3(0,0,0));
         scene.add(camera);
         //cameraForRT.copy(camera);
@@ -89,9 +87,9 @@ var Planet = function(configP){
         //light
         var ambient = new THREE.AmbientLight( 0xcccccc );
 		scene.add( ambient );
-        sunLight = new THREE.PointLight(0xffffff,1,sunR*10);
-        sunLight.position.set(sunR,sunR,-sunR);
-        sunLight.power = sunLightPower;
+        sunLight = new THREE.PointLight(0xffffff,1,config.sunR*10);
+        sunLight.position.set(config.sunR,config.sunR,0-config.sunR);
+        sunLight.power = config.sunLightPower;
         scene.add( sunLight );
 
         //make a planet
@@ -178,7 +176,7 @@ var Planet = function(configP){
         var circleN = 40;
         loLaLineLod = new THREE.LOD();
         for(var index = 0 ; index< LolaN.length ; index++){
-            var lolaball = LoLaBall(planetCenter,planetR*1.001,LolaN[index][0],LolaN[index][1],circleN*(index+1));
+            var lolaball = LoLaBall(planetCenter,config.planetR*1.001,LolaN[index][0],LolaN[index][1],circleN*(index+1));
             var lolaline = lolaball.geo;
             // var spline = new THREE.Spine(ti);
             var pointN = lolaball.pointN*3;
@@ -209,7 +207,7 @@ var Planet = function(configP){
         planetGeo = new THREE.SphereGeometry(1,200,100);
         //planetMat = new THREE.MeshBasicMaterial({color:0xffffff,wireframe:true});
         planetMat = new THREE.MeshPhongMaterial({
-            color:colorPlant,
+            color:config.colorPlant,
             shininess:50
         });
         planetMesh = new THREE.Mesh(planetGeo,planetMat);
@@ -314,7 +312,7 @@ var Planet = function(configP){
         var lengthCam = camera.position.length();
         if(lengthCam>10){
             scene.fog.far = lengthCam;
-            scene.fog.near = lengthCam - (planetR/2);
+            scene.fog.near = lengthCam - (config.planetR/2);
         }else{
             scene.fog.near = 1;
             scene.fog.far = 1000;
@@ -396,7 +394,7 @@ var Planet = function(configP){
     function LoLaconvertToXYZ(lola){
         var lo = lola.lo/180.0;
         var la = lola.la/180.0;
-        var r = planetR;
+        var r = config.planetR;
         var pos = new THREE.Vector3();
         pos.y = r*(Math.sin((la)*PI));
         var t_lo;
@@ -416,7 +414,7 @@ var Planet = function(configP){
         var x= position.x;
         var y = position.y;
         var z = position.z;
-        var r = planetR;
+        var r = config.planetR;
         var rt = new LoLa();
         rt.lo = Math.abs(Math.atan(z/x)/PI);
         if(x < 0.0 ) rt.lo = (1.0 - rt.lo); 
@@ -449,9 +447,9 @@ var Planet = function(configP){
     }
     function controlPart(){
         //lanetMesh.visible = false;
-        cloudMesh.visible = params_control.cloudShow;
-        loLaLineLod.visible = params_control.lolaLinesShow;
-        orbit.autoRotate = params_control.autoRotate;
+        cloudMesh.visible = config.cloudShow;
+        loLaLineLod.visible = config.lolaLinesShow;
+        orbit.autoRotate = config.autoRotate;
     }
     function makeMapLines(arrs,R){
         if(arrs === undefined||arrs.length <1) return 0;
@@ -468,7 +466,7 @@ var Planet = function(configP){
         return vec;
     }
     function makeMapMesh(data){
-        var R = planetR*1.1;
+        var R = config.planetR*1.1;
         if(data.type!="FeatureCollection") return ;
         var features = data.features;
         var mapG = new THREE.Group();
@@ -543,7 +541,7 @@ var Planet = function(configP){
             meshMap.name = mapname;
             scene.add(meshMap);
         },
-        params:params_control,
+        params:config,
         setMouse:function(v){
            mouse = v; 
         },

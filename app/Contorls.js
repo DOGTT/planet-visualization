@@ -5,7 +5,9 @@
  */
 var Contorl = function(){
     'use strict';
-    var planet = new Planet();
+    var planet = new Planet({
+        cloudShow:true,
+        textShow:false});
     var mouse = new THREE.Vector2();
     var paramC = {
             RayMarching:false
