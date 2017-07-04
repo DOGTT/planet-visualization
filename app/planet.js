@@ -22,18 +22,36 @@ var Planet = function(configP){
         lolaLinesShow:true,
         autoRotate:false,
         renderQuality:0,
-        //basic
+        //--basic
         planetR:1.0,
         cameraPosR:14,
         sunLightPower:25,
         colorPlant:0x6ec1ff,
         sunR :5,
+        //--basic
+        //planet_texture
+        planet_texture_path:'textures/planet/',
+        planet_texture_basic_file:'006.jpg',
+        planet_texture_specular_file:'earth_specular_2048.jpg',
+        planet_texture_bump_file:'earth-bump-4k.jpg',
+        planet_texture_clouds_file:'earth_clouds_2048.png',
+        //universe
+        universe_texture_path:'textures/universe/',
+        universe_texture_basic_file:[
+                "px.jpg","nx.jpg",
+                "py.jpg","ny.jpg",
+                "pz.jpg","nz.jpg"
+                ],
+        universe_texture_shader_path:'app/shader_lib/',
+        universe_texture_shader_file:['hdr.vs','hdr.fs'],
+
         DirectionText:{
             N:'北纬N',
             S:'南纬S',
             W:'西经W',
             E:'东经E'
         }
+        
     };
     var config = config_default;
     if(configP!==undefined){
@@ -231,24 +249,24 @@ var Planet = function(configP){
     }
     function loadPlanetText(){
         var loader = new THREE.TextureLoader();
-        loader.setPath('textures/planet/');
-        loader.load('006.jpg',function(tex){
+        loader.setPath(config.planet_texture_path);
+        loader.load(config.planet_texture_basic_file,function(tex){
             planetMat.map = tex;
             planetMat.color.set(0xffffff);
             planetMat.needsUpdate = true;
         },loadP.onProgress,loadP.onError);
-         loader.load('earth_specular_2048.jpg',function(tex){
+         loader.load(config.planet_texture_specular_file,function(tex){
             planetMat.specularMap = tex;
             planetMat.needsUpdate = true;
         },loadP.onProgress,loadP.onError);
-        loader.load('earth-bump-4k.jpg',function(tex){
+        loader.load(config.planet_texture_bump_file,function(tex){
             tex.anisotropy = 4;
             planetMat.bumpMap = tex;
             planetMat.bumpScale = 0.5;
             planetMat.needsUpdate = true;
         },loadP.onProgress,loadP.onError);
        // earth_clouds_2048
-        loader.load('earth_clouds_2048.png',function(tex){
+        loader.load(config.planet_texture_clouds_file,function(tex){
             cloudsMat.map = tex;
             cloudsMat.needsUpdate = true;
         },loadP.onProgress,loadP.onError);
@@ -264,15 +282,12 @@ var Planet = function(configP){
     }
     function loadUniverseText(){
         var loader = new THREE.CubeTextureLoader();
-        loader.setPath( "textures/universe/");
-        var urls = [
-        "px.jpg","nx.jpg",
-        "py.jpg","ny.jpg",
-        "pz.jpg","nz.jpg"
-        ];
+        loader.setPath( config.universe_texture_path);
+        var urls = config.universe_texture_basic_file;
         var floader = new FileLoader();
-        var name = ['hdr.vs','hdr.fs'];
-        floader.loadShader(name).then(
+        floader.setPath(config.universe_texture_shader_path);
+        var shader_name = config.universe_texture_shader_file;
+        floader.loadShader(shader_name).then(
             function(){
             loader.load( urls,function(tex){
             tex.format = THREE.RGBFormat;
@@ -316,7 +331,7 @@ var Planet = function(configP){
     }
     function fogContorl(){
         var lengthCam = camera.position.length();
-        if(lengthCam>10){
+        if(lengthCam>12){
             scene.fog.far = lengthCam;
             scene.fog.near = lengthCam - (config.planetR/2);
         }else{
