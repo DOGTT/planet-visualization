@@ -184,17 +184,17 @@ var Planet = function(configP){
         // scene.add(cs3);
         // //planetMesh.visible = false;
     }
-    function addLine(p1,p2){
+    function addLine(p1,p2,color){
         var p1 = LoLaconvertToXYZ(p1);
         var p2 = LoLaconvertToXYZ(p2);
          var material = new THREE.LineBasicMaterial({
-            color: 0x0000ff
+            color: color
         });
         var geometry = new THREE.Geometry();
         geometry.vertices = PointToPoint(p1,p2);
         console.log(PointToPoint(p1,p2));
         var line = new THREE.Line( geometry, material );
-        scene.add(line);
+        linesGroup.add(line);
     }
 
     function next(){
@@ -566,8 +566,9 @@ var Planet = function(configP){
             renderTargets[name] = rt;
         },
         addSingleLine:function(lolaS,lolaE,color){
+            var color = color!==undefined?color:0xffffff;
             if(lolaS instanceof LoLa && lolaE instanceof LoLa ){
-                addLine(lolaS,lolaE);
+                addLine(lolaS,lolaE,color);
             }
         },
         addAnimationLines:function(pointSArray,pointEArray){
@@ -579,10 +580,15 @@ var Planet = function(configP){
             
         },
         romoveMesh:function(name){   
-            scene.remove(scene.getObjectByName(name));
+            var name  =name!==undefined?name:DefaultMeshName;
+            MeshsGroup.remove(MeshsGroup.getObjectByName(name));
+        },
+        romoveMeshFromRT:function(name){   
+            var name  =name!==undefined?name:DefaultMeshName;
             sceneForRT.remove(sceneForRT.getObjectByName(name));
         },
         removeRenderTarget:function(name){
+            var name  =name!==undefined?name:DefaultMeshName;
             for(var rt in renderTargets){
                 if(rt === name ){
                     renderer.clearTarget(renderTargets[rt]);
