@@ -60,6 +60,7 @@ var Planet = function(configP){
         }
     }
     
+    var DefaultMeshName = "nameless";
     var sunLight;
     var PI = Math.PI;
     var planetCenter = new THREE.Vector3(0,0,0);
@@ -152,10 +153,13 @@ var Planet = function(configP){
         stats = new Stats();
         container.appendChild(stats.dom);
         scene.add(drawAxes(2));
-        test();
+        
         linesGroup = new THREE.Group();
         MeshsGroup = new THREE.Group();
-
+        scene.add(MeshsGroup);
+        scene.add(linesGroup);
+        //test
+        test();
     }
     function test(){
         var p1 = new THREE.Vector3(0,0,0);
@@ -535,23 +539,35 @@ var Planet = function(configP){
          * @param 
          * lo and la is from the left-down corner
          */
-        addMesh:function(mesh,name,lo,la,height,flagRT){    
-            var lo = lo!==undefined?lo:0,
-                la = la!==undefined?la:0,
-                flagRT = flagRT!==undefined?flagRT:false;
+        addMesh:function(mesh,name,lola,height){
+            if(!(mesh instanceof THREE.Mesh))
+                return 0;  
+            var lola = lola!==undefined?lola:new LoLa(0,0),
+                name  =name!==undefined?name:DefaultMeshName,
+                height  =height!==undefined?height:0;
             positionMesh(mesh,lo,la,height);
             mesh.name = name;
-            if(flagRT)
-               sceneForRT.add(mesh);
-            else
-                scene.add(mesh);
+            MeshsGroup.add(mesh);
+        },
+        addMeshToRT:function(mesh,name,lola,height){
+            if(!(mesh instanceof THREE.Mesh))
+                return 0;      
+             var lola = lola!==undefined?lola:new LoLa(0,0),
+                name  =name!==undefined?name:DefaultMeshName,
+                height  =height!==undefined?height:0;
+            positionMesh(mesh,lo,la,height);
+            mesh.name = name;
+            sceneForRT.add(mesh);
         },
         addRenderTarget:function(rt,name){
+            if(!(rt instanceof THREE.WebGLRenderTarget))
+                return 0;
+            var name  =name!==undefined?name:DefaultMeshName;
             renderTargets[name] = rt;
         },
-        addSingleLine:function(pointS,pointE,color){
-            if(pointS instanceof LoLa && pointE instanceof LoLa ){
-                addLine(pointS,pointE);
+        addSingleLine:function(lolaS,lolaE,color){
+            if(lolaS instanceof LoLa && lolaE instanceof LoLa ){
+                addLine(lolaS,lolaE);
             }
         },
         addAnimationLines:function(pointSArray,pointEArray){
