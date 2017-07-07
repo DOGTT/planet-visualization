@@ -64,12 +64,17 @@ var Planet = function(configP){
     var PI = Math.PI;
     var planetCenter = new THREE.Vector3(0,0,0);
     var container,camera,scene,renderer;
+    //renderTargets
     var renderTargets = new Object();
+
     var sceneForRT,cameraForRT;
     var orbit,stats,loadP;
+    //planet texture
     var planetMesh,planetMat,planetGeo,cloudMesh,cloudsMat;
+    //universe scene and texture
     var universeCamera,universeScene;
     var universeMesh,universeMat,universeGeo;
+    //the Latitude and longitude Lod 
     var loLaLineLod;
     
     var i,j;
@@ -84,6 +89,10 @@ var Planet = function(configP){
     next();
     animate();
     
+    //Group
+    var linesGroup,MeshsGroup;
+
+    //init function
     function init(){    
         container = document.createElement('div');
         document.body.appendChild(container);
@@ -144,6 +153,8 @@ var Planet = function(configP){
         container.appendChild(stats.dom);
         scene.add(drawAxes(2));
         test();
+        linesGroup = new THREE.Group();
+        MeshsGroup = new THREE.Group();
 
     }
     function test(){
@@ -538,8 +549,18 @@ var Planet = function(configP){
         addRenderTarget:function(rt,name){
             renderTargets[name] = rt;
         },
-        addLines:function(p1,p2){
-            addLine(p1,p2);
+        addSingleLine:function(pointS,pointE,color){
+            if(pointS instanceof LoLa && pointE instanceof LoLa ){
+                addLine(pointS,pointE);
+            }
+        },
+        addAnimationLines:function(pointSArray,pointEArray){
+            if(pointSArray.length === pointEArray.length){
+                for(let i = 0;i<pointEArray.length;i++){
+
+                }
+            }
+            
         },
         romoveMesh:function(name){   
             scene.remove(scene.getObjectByName(name));
