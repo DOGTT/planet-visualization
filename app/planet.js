@@ -545,7 +545,7 @@ var Planet = function(configP){
             var lola = lola!==undefined?lola:new LoLa(0,0),
                 name  =name!==undefined?name:DefaultMeshName,
                 height  =height!==undefined?height:0;
-            positionMesh(mesh,lo,la,height);
+            positionMesh(mesh,lola.lo,lola.la,height);
             mesh.name = name;
             MeshsGroup.add(mesh);
         },
@@ -555,7 +555,7 @@ var Planet = function(configP){
              var lola = lola!==undefined?lola:new LoLa(0,0),
                 name  =name!==undefined?name:DefaultMeshName,
                 height  =height!==undefined?height:0;
-            positionMesh(mesh,lo,la,height);
+           positionMesh(mesh,lola.lo,lola.la,height);
             mesh.name = name;
             sceneForRT.add(mesh);
         },

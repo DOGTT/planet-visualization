@@ -48,14 +48,12 @@ var Contorl = function(){
         gui.add( paramC, 'RayMarching' ).onChange(paramOnChange);
         //planet.setParams(params);
         gui.open();
-        console.log(new planet.LoLa(12,32));
-        planet.addLines(new planet.LoLa(12,32),new planet.LoLa(34,-32));
         for(var i = 0;i<5;i++){
             var s1=Math.random()-0.5;
-             var s2=Math.random()-0.5;
+            var s2=Math.random()-0.5;
             var e1 = Math.random()-0.5;
             var e2 = Math.random()-0.5;
-        planet.addLines(new planet.LoLa(s1*360,s2*180),new planet.LoLa(e1*360,e2*180));
+            planet.addSingleLine(new planet.LoLa(s1*360,s2*180),new planet.LoLa(e1*360,e2*180));
          }
         // var cdsac = new THREE.BoxGeometry(0.01,0.01,0.01 );
 		// var cdaca = new THREE.MeshBasicMaterial( {wireframe:true} );
@@ -67,7 +65,6 @@ var Contorl = function(){
         //     }
         // }
 
-        //console.log();
     }
     function mapLoad(){
         var filename = "china-provinces.json";//world-50m
@@ -101,9 +98,8 @@ var Contorl = function(){
             var meshRT = rayMarch.meshRT;
             mesh.scale.set(0.4,0.4,0.4);
             meshRT.scale.set(0.4,0.4,0.4);
-            //mesh.rotation.y = Math.PI;
-            planet.addMesh(mesh,objName.rayMarch,117.5,22.35,0.3);
-            planet.addMesh(meshRT,objName.rayMarch,117.5,22.35,0.3,true);
+            planet.addMesh(mesh,objName.rayMarch,new planet.LoLa(117.5,22.35),0.3);
+            planet.addMeshToRT(meshRT,objName.rayMarch,new planet.LoLa(117.5,22.35),0.3);
             planet.addRenderTarget(rayMarch.rtObj,objName.rayMarch);      
         }); 
     }
