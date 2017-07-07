@@ -191,8 +191,7 @@ var Planet = function(configP){
             color: color
         });
         var geometry = new THREE.Geometry();
-        geometry.vertices = PointToPoint(p1,p2);
-        console.log(PointToPoint(p1,p2));
+        geometry.vertices = PointToPoint(p1,p2,0.2,20);
         var line = new THREE.Line( geometry, material );
         linesGroup.add(line);
     }
