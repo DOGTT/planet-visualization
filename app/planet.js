@@ -184,14 +184,31 @@ var Planet = function(configP){
         // scene.add(cs3);
         // //planetMesh.visible = false;
     }
-    function addLine(p1,p2,color){
+    function addLine(p1,p2,color,dynamic){
         var p1 = LoLaconvertToXYZ(p1);
         var p2 = LoLaconvertToXYZ(p2);
+        var high =0.2,pointMount = 20;
+        var linePoints = PointToPoint(p1,p2,high,pointMount);
+        console.log(linePoints);
+        var geometry = new THREE.BufferGeometry();
+        var positions = new Float32Array(pointMount*3);
+        geometry.addAttribute('position',new THREE.BufferAttribute(
+            positions,3
+        ));
+        for(let i = 0;i<pointMount;i++){
+            positions[i*3] = linePoints[i].x;
+            positions[i*3+1] = linePoints[i].y;
+            positions[i*3+2] = linePoints[i].z;
+        }
+        if(dynamic){
+            
+        }
          var material = new THREE.LineBasicMaterial({
-            color: color
+            color: color,
+            linewidth:2
         });
-        var geometry = new THREE.Geometry();
-        geometry.vertices = PointToPoint(p1,p2,0.2,20);
+       
+       // geometry.vertices = linePoints
         var line = new THREE.Line( geometry, material );
         linesGroup.add(line);
     }
