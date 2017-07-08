@@ -187,9 +187,9 @@ var Planet = function(configP){
     function addLine(p1,p2,color,dynamic){
         var p1 = LoLaconvertToXYZ(p1);
         var p2 = LoLaconvertToXYZ(p2);
-        var high =0.2,pointMount = 20;
+        var high =0.4,pointMount = 40;
         var linePoints = PointToPoint(p1,p2,high,pointMount);
-        console.log(linePoints);
+        
         var geometry = new THREE.BufferGeometry();
         var positions = new Float32Array(pointMount*3);
         geometry.addAttribute('position',new THREE.BufferAttribute(
@@ -203,13 +203,13 @@ var Planet = function(configP){
         if(dynamic){
             
         }
-         var material = new THREE.LineBasicMaterial({
+        var material = new THREE.LineBasicMaterial({
             color: color,
             linewidth:2
         });
-       
-       // geometry.vertices = linePoints
+        console.log(linesGroup);
         var line = new THREE.Line( geometry, material );
+        line.dynamic=dynamic;
         linesGroup.add(line);
     }
 
@@ -348,19 +348,50 @@ var Planet = function(configP){
         rotationForY(sunLight,0.002);
         universeCamera.rotation.copy( camera.rotation );
         renderer.render(universeScene,universeCamera);
-        
 
+        renderTimeControl();
+        //
         renderer.autoClear = false;
-        raycasterRender();
-        lodRender();
-        fogContorl();
-        spangleStar();
-        ProssRT();
-        
+        raycaster_render();
+        lod_render();
+        fog_contorl();
+        spangleStar_contorl();
+        ProssRT_render();
+        lines_render();
         renderer.render(scene,camera);
         //renderer.clearColor ();
     }
-    function fogContorl(){
+    function renderTimeControl(){
+        var t =  (new Date()).getTime();
+        if(scene.timeNow!==undefined){  
+            scene.timeDifference = t -  scene.timeNow ;  
+        }
+        else{
+            scene.timeNow = t;
+            scene.timeDifference = 0;
+        }
+    }
+    function lines_render(){
+        //var show_range = 0.5;
+        var moveSpeed = 0.5; //one second move 0.1
+        linesGroup.traverse(
+            function(line){
+                if(line instanceof THREE.Line){
+                    if(line.dynamic){
+                        var n = line.geometry.attributes.position.count;
+                        var add = Math.floor((scene.timeDifference * moveSpeed * n)/1000);
+                        //console.log(add);
+                        //line.geometry.drawRange = 
+                        var drawRangeS = line.geometry.drawRange.start;
+                        drawRangeS = add%n;
+                        if(drawRangeS>n) drawRangeS =0;
+                        line.geometry.setDrawRange( drawRangeS, 10 );
+                    }
+                }
+            }
+        )
+    }
+    function fog_contorl(){
         var lengthCam = camera.position.length();
         if(lengthCam>12){
             scene.fog.far = lengthCam;
@@ -373,7 +404,7 @@ var Planet = function(configP){
         //var lib = THREE.ShaderLib[ "phong" ];
         //console.log(lib);
     }
-    function lodRender(){
+    function lod_render(){
         scene.traverse(
             function(obj){
                 if(obj instanceof THREE.LOD){
@@ -382,7 +413,7 @@ var Planet = function(configP){
             }
         );
     }
-    function ProssRT(){
+    function ProssRT_render(){
         for(var rt in renderTargets){
             renderer.clearTarget(renderTargets[rt]);
             //camera.updateProjectionMatrix();
@@ -390,7 +421,7 @@ var Planet = function(configP){
             renderer.render(sceneForRT,camera,renderTargets[rt],false);
         }
     }
-    function spangleStar(){
+    function spangleStar_contorl(){
         
         if(universeMat.uniforms.bright!=undefined){
             var brv = universeMat.uniforms.bright.value;
@@ -401,7 +432,7 @@ var Planet = function(configP){
             universeMat.uniforms.bright.value = brv;
         }
     }
-    function raycasterRender(){
+    function raycaster_render(){
          //raycaster
         raycaster.setFromCamera(mouse,camera);
         intersects = raycaster.intersectObject(planetMesh);
@@ -584,7 +615,7 @@ var Planet = function(configP){
         addSingleLine:function(lolaS,lolaE,color){
             var color = color!==undefined?color:0xffffff;
             if(lolaS instanceof LoLa && lolaE instanceof LoLa ){
-                addLine(lolaS,lolaE,color);
+                addLine(lolaS,lolaE,color,true);
             }
         },
         addAnimationLines:function(pointSArray,pointEArray){
