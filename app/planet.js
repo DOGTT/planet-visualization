@@ -106,7 +106,7 @@ var Planet = function(configP){
         scene = new THREE.Scene();
         universeScene = new THREE.Scene();
         sceneForRT = new THREE.Scene();
-        scene.fog = new THREE.Fog(config.colorPlant,config.cameraPosR-(config.planetR/2),config.cameraPosR);//0xf2f7ff
+        //scene.fog = new THREE.Fog(config.colorPlant,config.cameraPosR-(config.planetR/2),config.cameraPosR);//0xf2f7ff
        
         //camera
         camera = new THREE.PerspectiveCamera(10,viewSize.x/viewSize.y,1,2000);
@@ -354,7 +354,7 @@ var Planet = function(configP){
         renderer.autoClear = false;
         raycaster_render();
         lod_render();
-        fog_contorl();
+        //fog_contorl();
         spangleStar_contorl();
         ProssRT_render();
         lines_render();
