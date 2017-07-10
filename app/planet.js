@@ -69,7 +69,7 @@ var Planet = function(configP){
     var renderTargets = new Object();
 
     var sceneForRT,cameraForRT;
-    var orbit,stats,loadP;
+    var viewControler,stats,loadP;
     //planet texture
     var planetMesh,planetMat,planetGeo,cloudMesh,cloudsMat;
     //universe scene and texture
@@ -140,16 +140,16 @@ var Planet = function(configP){
         renderer.setSize(viewSize.x,viewSize.y);
         renderer.setClearColor(0xf0f0f0);
         container.appendChild(renderer.domElement);
-        //orbit control and stats
-        orbit = new THREE.OrbitControls(camera,renderer.domElement);
-        orbit.target.set( 0.0, 0.0, 0.0 );
-        orbit.zoomSpeed = 0.5;
-        orbit.rotateSpeed = 0.5;
-        //orbit.enableDamping = true;
-        orbit.minDistance = 2;
-        orbit.maxDistance = 14;
-        orbit.autoRotateSpeed = 1.0;
-        orbit.autoRotate = true;
+        //viewControler control and stats
+        viewControler = new THREE.TrackballControls(camera,renderer.domElement);
+        viewControler.target.set( 0.0, 0.0, 0.0 );
+        viewControler.zoomSpeed = 0.5;
+        viewControler.rotateSpeed = 0.5;
+        //viewControler.enableDamping = true;
+        viewControler.minDistance = 2;
+        viewControler.maxDistance = 14;
+        viewControler.autoRotateSpeed = 1.0;
+        viewControler.autoRotate = true;
         stats = new Stats();
         container.appendChild(stats.dom);
         scene.add(drawAxes(2));
@@ -384,7 +384,7 @@ var Planet = function(configP){
         controlPart();
         render();
         stats.update();
-        orbit.update();
+        viewControler.update();
     }
     function render(){
         rotationForY(sunLight,0.002);
@@ -574,7 +574,7 @@ var Planet = function(configP){
         //lanetMesh.visible = false;
         cloudMesh.visible = config.cloudShow;
         loLaLineLod.visible = config.lolaLinesShow;
-        orbit.autoRotate = config.autoRotate;
+        viewControler.autoRotate = config.autoRotate;
     }
     function makeMapLines(arrs,R){
         if(arrs === undefined||arrs.length <1) return 0;
