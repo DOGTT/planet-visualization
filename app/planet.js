@@ -87,7 +87,7 @@ var Planet = function(configP){
     var windowHalfX = viewSize.x/2;
     var windowHalfY = viewSize.y/2;
     init();
-    next();
+    makeAmbient();
     animate();
     
     //Group
@@ -183,6 +183,48 @@ var Planet = function(configP){
         // var cs3 = new THREE.Mesh(cdsac,cdaca);
         // scene.add(cs3);
         // //planetMesh.visible = false;
+
+        var uniforms = {
+            color:{value:new THREE.Color(0xffffff)},
+            texture:{value:new THREE.TextureLoader().load("textures/spark1.png")}
+        };
+
+        var shaderMaterial = new THREE.ShaderMaterial({
+            uniforms: uniforms,
+            blending: THREE.AdditiveBlending,
+            depthTest:true,
+            transparent:true 
+        });
+                var floader = new FileLoader();
+        floader.setPath(config.universe_texture_shader_path);
+        var shader_name =  ["particles.vs","particles.fs"];
+        floader.loadShader(shader_name).then(
+            function(){
+            shaderMaterial.fragmentShader = floader.getfShader();
+            shaderMaterial.vertexShader = floader.getvShader();
+                        var p_n= 1;
+            var geo = new THREE.BufferGeometry();
+            var positions = new Float32Array(p_n*3);
+            var colors = new Float32Array( p_n * 3 );
+            var sizes = new Float32Array( p_n );
+            var poin = LoLaconvertToXYZ(new LoLa(114,23));
+            positions[0] = poin.x;
+            positions[1] = poin.y;
+            positions[2] = poin.z;
+            var color = new THREE.Color();
+            color.setHSL(0.5,1.0,0.5);
+            colors[0] = 1.0;
+            colors[1] = 0.0;
+            colors[2] = 0.0;
+            sizes[0] = 1;
+            geo.addAttribute( 'position', new THREE.BufferAttribute( positions, 3 ) );
+            geo.addAttribute( 'customColor', new THREE.BufferAttribute( colors, 3 ) );
+            geo.addAttribute( 'size', new THREE.BufferAttribute( sizes, 1 ) );
+            var particlesMesh = new THREE.Points(geo,shaderMaterial);
+            scene.add(particlesMesh);
+            }
+        ); 
+
     }
     function addLine(p1,p2,color,dynamic){
         var p1 = LoLaconvertToXYZ(p1);
@@ -213,7 +255,7 @@ var Planet = function(configP){
         linesGroup.add(line);
     }
 
-    function next(){
+    function makeAmbient(){
         makeUniverse();
         makeLoLaLine();
         

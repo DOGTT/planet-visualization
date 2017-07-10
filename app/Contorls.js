@@ -6,7 +6,7 @@
 var Contorl = function(){
     'use strict';
     var planet = new Planet({
-        cloudShow:true,
+        cloudShow:false,
         textShow:false});
     var mouse = new THREE.Vector2();
     var paramC = {
@@ -53,7 +53,7 @@ var Contorl = function(){
             var s2=Math.random()-0.5;
             var e1 = Math.random()-0.5;
             var e2 = Math.random()-0.5;
-            planet.addSingleLine(new planet.LoLa(s1*360,s2*180),new planet.LoLa(e1*360,e2*180),0xff0000);
+           // planet.addSingleLine(new planet.LoLa(s1*360,s2*180),new planet.LoLa(e1*360,e2*180),0xff0000);
          }
         // var cdsac = new THREE.BoxGeometry(0.01,0.01,0.01 );
 		// var cdaca = new THREE.MeshBasicMaterial( {wireframe:true} );
@@ -64,7 +64,7 @@ var Contorl = function(){
         //         planet.addMesh(cs,'test',lons + j*0.8,lats + i*0.8,0.2);
         //     }
         // }
-        
+
 
     }
     function mapLoad(){
