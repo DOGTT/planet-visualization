@@ -25,7 +25,7 @@ var Planet = function(configP){
         //--basic
         planetR:1.0,
         cameraPosR:14,
-        sunLightPower:25,
+        sunLightPower:4,
         colorPlant:0x6ec1ff,
         sunR :5,
         //--basic
@@ -121,9 +121,8 @@ var Planet = function(configP){
         //light
         var ambient = new THREE.AmbientLight( 0xcccccc );
 		scene.add( ambient );
-        sunLight = new THREE.PointLight(0xffffff,1,config.sunR*10);
+        sunLight = new THREE.DirectionalLight( 0xffffff, config.sunLightPower );
         sunLight.position.set(config.sunR,config.sunR,0-config.sunR);
-        sunLight.power = config.sunLightPower;
         scene.add( sunLight );
 
         //make a planet
@@ -302,7 +301,6 @@ var Planet = function(configP){
     }
     function makePlanet(){
         planetGeo = new THREE.SphereGeometry(1,200,100);
-        //planetMat = new THREE.MeshBasicMaterial({color:0xffffff,wireframe:true});
         planetMat = new THREE.MeshPhongMaterial({
             color:config.colorPlant,
             shininess:50
@@ -316,6 +314,74 @@ var Planet = function(configP){
         cloudMesh = new THREE.Mesh(planetGeo,cloudsMat);
         scene.add(planetMesh);
         scene.add(cloudMesh);
+        var atmoShader = {
+            side: THREE.BackSide,
+            // blending: THREE.AdditiveBlending,
+            transparent: true,
+            lights: true,
+            uniforms: THREE.UniformsUtils.merge( [
+
+                THREE.UniformsLib[ "common" ],
+                THREE.UniformsLib[ "lights" ]
+
+            ] ),
+            vertexShader: [
+                "varying vec3 vViewPosition;",
+                "varying vec3 vNormal;",
+                "void main() {",
+                    THREE.ShaderChunk[ "beginnormal_vertex" ],
+                    THREE.ShaderChunk[ "defaultnormal_vertex" ],
+
+                    "	vNormal = normalize( transformedNormal );",
+                    "vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );",
+                    "vViewPosition = -mvPosition.xyz;",
+                    "gl_Position = projectionMatrix * mvPosition;",
+                "}"
+
+            ].join("\n"),
+
+            fragmentShader: [
+
+                THREE.ShaderChunk[ "common" ],
+                THREE.ShaderChunk[ "bsdfs" ],
+                THREE.ShaderChunk[ "lights_pars" ],
+                THREE.ShaderChunk[ "lights_phong_pars_fragment" ],
+
+                "void main() {",
+                    "vec3 normal = normalize( -vNormal );",
+                    "vec3 viewPosition = normalize( vViewPosition );",
+                    "#if NUM_DIR_LIGHTS > 0",
+
+                        "vec3 dirDiffuse = vec3( 0.0 );",
+
+                        "for( int i = 0; i < NUM_DIR_LIGHTS; i ++ ) {",
+
+                            "vec4 lDirection = viewMatrix * vec4( directionalLights[i].direction, 0.0 );",
+                            "vec3 dirVector = normalize( lDirection.xyz );",
+                            "float dotProduct = dot( viewPosition, dirVector );",
+                            "dotProduct = 1.0 * max( dotProduct, 0.0 ) + (1.0 - max( -dot( normal, dirVector ), 0.0 ));",
+                            "dotProduct *= dotProduct;",
+                            "dirDiffuse += max( 0.5 * dotProduct, 0.0 ) * directionalLights[i].color;",
+                        "}",
+                    "#endif",
+                    
+                    //Fade out atmosphere at edge
+                    "float viewDot = abs(dot( normal, viewPosition ));",
+                    "viewDot = clamp( pow( viewDot + 0.6, 10.0 ), 0.0, 1.0);",
+
+                    "vec3 color = vec3( 0.05, 0.08, 0.15 ) * dirDiffuse;",
+                    //"vec3 color = vec3( 0.75, 0.69, 0.83 ) ;",
+                    "gl_FragColor = vec4( color, viewDot );",
+
+                "}"
+
+            ].join("\n")
+		};
+        var planetAtmoMat = new THREE.ShaderMaterial( atmoShader );
+        var planetAtmoMesh = new THREE.Mesh( planetGeo, planetAtmoMat );
+        planetAtmoMesh.scale.set( 1.1, 1.1, 1.1 );
+        scene.add( planetAtmoMesh );
+        ///
     //     var geo = new THREE.SphereGeometry(1.1,100,50);
     //    var mat = new THREE.MeshBasicMaterial({color:0xcccccc,opacity:0.1,transparent :true});
     //     scene.add(new THREE.Mesh(geo,mat));
@@ -345,8 +411,6 @@ var Planet = function(configP){
         },loadP.onProgress,loadP.onError);
     }
     function makeUniverse(){
-        
-
         universeGeo = new THREE.BoxGeometry(10,10,10);
         universeMat = new THREE.ShaderMaterial();
         universeMesh = new THREE.Mesh(universeGeo,universeMat);
