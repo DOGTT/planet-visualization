@@ -144,7 +144,7 @@ var Planet = function(configP){
         viewControler = new THREE.TrackballControls(camera,renderer.domElement);
         viewControler.target.set( 0.0, 0.0, 0.0 );
         viewControler.zoomSpeed = 0.5;
-        viewControler.rotateSpeed = 0.5;
+        viewControler.rotateSpeed = 1.5;
         //viewControler.enableDamping = true;
         viewControler.minDistance = 2;
         viewControler.maxDistance = 14;
@@ -170,8 +170,8 @@ var Planet = function(configP){
         var geometry = new THREE.Geometry();
         geometry.vertices = PointToPoint(p1,p2);
         console.log(PointToPoint(p1,p2));
-        var line = new THREE.Line( geometry, material );
-        scene.add(line);
+        //var line = new THREE.Line( geometry, material );
+       // scene.add(line);
         //planetMesh.visible = false;
         //  var   group = new THREE.Group();
         // scene.add( group );
