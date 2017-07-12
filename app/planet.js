@@ -303,7 +303,7 @@ var Planet = function(configP){
         planetGeo = new THREE.SphereGeometry(1,200,100);
         planetMat = new THREE.MeshPhongMaterial({
             color:config.colorPlant,
-            shininess:50
+            shininess:20
         });
         planetMesh = new THREE.Mesh(planetGeo,planetMat);
         cloudsMat = new THREE.MeshLambertMaterial( {
@@ -654,11 +654,11 @@ var Planet = function(configP){
         return vec;
     }
     function makeMapMesh(data){
-        var R = config.planetR*1.1;
+        var R = config.planetR*1.001;
         if(data.type!="FeatureCollection") return ;
         var features = data.features;
         var mapG = new THREE.Group();
-        var colorSet = 0xcccccc;
+        var colorSet = 0x000000;
         for(var i =0;i<features.length;i++){
             var io = 0,unit;
             var coo = features[i].geometry;
@@ -675,7 +675,7 @@ var Planet = function(configP){
             if(coo.type == "Polygon"){
                 var geometry = new THREE.Geometry();
                 var material = new THREE.LineBasicMaterial({color:colorSet});
-                var temp =  makeMapLines(coo.coordinates);
+                var temp =  makeMapLines(coo.coordinates,R);
                 geometry.vertices = temp;
                 unit = new THREE.Line(geometry,material);
             }
