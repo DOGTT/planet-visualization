@@ -55,6 +55,7 @@ var Contorl = function(){
             var e2 = Math.random()-0.5;
            // planet.addSingleLine(new planet.LoLa(s1*360,s2*180),new planet.LoLa(e1*360,e2*180),0xff0000);
          }
+         planet.addSingleLine(new planet.LoLa(30,10),new planet.LoLa(100,-10),0xffff00);
         // var cdsac = new THREE.BoxGeometry(0.01,0.01,0.01 );
 		// var cdaca = new THREE.MeshBasicMaterial( {wireframe:true} );
         // var lons = 100,lats = 0;

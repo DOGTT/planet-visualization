@@ -206,7 +206,7 @@ var Planet = function(configP){
             var positions = new Float32Array(p_n*3);
             var colors = new Float32Array( p_n * 3 );
             var sizes = new Float32Array( p_n );
-            var poin = LoLaconvertToXYZ(new LoLa(114,23));
+            var poin = LoLaconvertToXYZ(new LoLa(30,10));
             positions[0] = poin.x;
             positions[1] = poin.y;
             positions[2] = poin.z;
@@ -478,7 +478,7 @@ var Planet = function(configP){
         }
     }
     function lines_render(){
-        //var show_range = 0.5;
+        var show_range = 0.5;
         var moveSpeed = 0.5; //one second move 0.1
         linesGroup.traverse(
             function(line){
@@ -486,12 +486,11 @@ var Planet = function(configP){
                     if(line.dynamic){
                         var n = line.geometry.attributes.position.count;
                         var add = Math.floor((scene.timeDifference * moveSpeed * n)/1000);
-                        //console.log(add);
-                        //line.geometry.drawRange = 
-                        var drawRangeS = line.geometry.drawRange.start;
-                        drawRangeS = add%n;
-                        if(drawRangeS>n) drawRangeS =0;
-                        line.geometry.setDrawRange( drawRangeS, 10 );
+                        //console.log(add); 
+                        var drawRange = line.geometry.drawRange.start;
+                        var max_range =  Math.floor(show_range*n);
+                        drawRange = add%(n+max_range);
+                        line.geometry.setDrawRange( drawRange - max_range, drawRange );   
                     }
                 }
             }
