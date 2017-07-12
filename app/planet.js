@@ -268,11 +268,12 @@ var Planet = function(configP){
     }
     function makeLoLaLine(){
         //Lo,LaN,distance
+        var R = config.planetR*1.001;
         var LolaN=[[0,0,10],[9,5,8],[18,9,6],[36,17,4],[72,33,2]];
         var circleN = 40;
         loLaLineLod = new THREE.LOD();
         for(var index = 0 ; index< LolaN.length ; index++){
-            var lolaball = LoLaBall(planetCenter,config.planetR*1.001,LolaN[index][0],LolaN[index][1],circleN*(index+1));
+            var lolaball = LoLaBall(planetCenter,R,LolaN[index][0],LolaN[index][1],circleN*(index+1));
             var lolaline = lolaball.geo;
             // var spline = new THREE.Spine(ti);
             var pointN = lolaball.pointN*3;
