@@ -411,10 +411,10 @@ var Planet = function(configP){
             planetMat.needsUpdate = true;
         },loadP.onProgress,loadP.onError);
        // earth_clouds_2048
-        loader.load(config.planet_texture_clouds_file,function(tex){
-            cloudsMat.map = tex;
-            cloudsMat.needsUpdate = true;
-        },loadP.onProgress,loadP.onError);
+        // loader.load(config.planet_texture_clouds_file,function(tex){
+        //     cloudsMat.map = tex;
+        //     cloudsMat.needsUpdate = true;
+        // },loadP.onProgress,loadP.onError);
     }
     function makeUniverse(){
         universeGeo = new THREE.BoxGeometry(10,10,10);
