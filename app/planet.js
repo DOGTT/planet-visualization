@@ -201,21 +201,26 @@ var Planet = function(configP){
             function(){
             shaderMaterial.fragmentShader = floader.getfShader();
             shaderMaterial.vertexShader = floader.getvShader();
-                        var p_n= 1;
+            var p_n= 10000;
             var geo = new THREE.BufferGeometry();
             var positions = new Float32Array(p_n*3);
             var colors = new Float32Array( p_n * 3 );
             var sizes = new Float32Array( p_n );
-            var poin = LoLaconvertToXYZ(new LoLa(30,10));
-            positions[0] = poin.x;
-            positions[1] = poin.y;
-            positions[2] = poin.z;
+            for(var i = 0;i<p_n;i++){
+                var s1=Math.random()-0.5;
+                var s2=Math.random()-0.5;
+                var poin = LoLaconvertToXYZ(new LoLa(s1*360,s2*180));
+                positions[i*3] = poin.x*1.1;
+                positions[i*3+1] = poin.y*1.1;
+                positions[i*3+2] = poin.z*1.1;
+                colors[i*3] = poin.x;
+                colors[i*3+1] = poin.y;
+                colors[i*3+2] = poin.z;
+                sizes[i] = 1;
+            }
             var color = new THREE.Color();
-            color.setHSL(0.5,1.0,0.5);
-            colors[0] = 1.0;
-            colors[1] = 0.0;
-            colors[2] = 0.0;
-            sizes[0] = 1;
+            //color.setHSL(0.5,1.0,0.5);
+            
             geo.addAttribute( 'position', new THREE.BufferAttribute( positions, 3 ) );
             geo.addAttribute( 'customColor', new THREE.BufferAttribute( colors, 3 ) );
             geo.addAttribute( 'size', new THREE.BufferAttribute( sizes, 1 ) );
