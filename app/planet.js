@@ -229,6 +229,29 @@ var Planet = function(configP){
             }
         ); 
 
+        //text
+        var loader = new THREE.FontLoader();
+
+        loader.load( 'fonts/helvetiker_regular.typeface.json', function ( font ) {
+
+            var geometry = new THREE.TextGeometry( 'Hello World!', {
+                font: font,
+                size: 80,
+                height: 5,
+                curveSegments: 12,
+                bevelEnabled: true,
+                bevelThickness: 10,
+                bevelSize: 8,
+                bevelSegments: 5
+            } );
+            var tm = new THREE.Mesh(geometry,new THREE.MeshLambertMaterial({
+                color:0xee02ff
+            }));
+            tm.scale.x =  tm.scale.y =  tm.scale.z = 0.001;
+            positionMesh(tm,146,25,0);
+            scene.add(tm);
+        } );
+
     }
     function addLine(p1,p2,color,dynamic){
         var p1 = LoLaconvertToXYZ(p1);
@@ -395,21 +418,21 @@ var Planet = function(configP){
     function loadPlanetText(){
         var loader = new THREE.TextureLoader();
         loader.setPath(config.planet_texture_path);
-        loader.load(config.planet_texture_basic_file,function(tex){
-            planetMat.map = tex;
-            planetMat.color.set(0xffffff);
-            planetMat.needsUpdate = true;
-        },loadP.onProgress,loadP.onError);
-         loader.load(config.planet_texture_specular_file,function(tex){
-            planetMat.specularMap = tex;
-            planetMat.needsUpdate = true;
-        },loadP.onProgress,loadP.onError);
-        loader.load(config.planet_texture_bump_file,function(tex){
-            tex.anisotropy = 4;
-            planetMat.bumpMap = tex;
-            planetMat.bumpScale = 0.5;
-            planetMat.needsUpdate = true;
-        },loadP.onProgress,loadP.onError);
+        // loader.load(config.planet_texture_basic_file,function(tex){
+        //     planetMat.map = tex;
+        //     planetMat.color.set(0xffffff);
+        //     planetMat.needsUpdate = true;
+        // },loadP.onProgress,loadP.onError);
+        //  loader.load(config.planet_texture_specular_file,function(tex){
+        //     planetMat.specularMap = tex;
+        //     planetMat.needsUpdate = true;
+        // },loadP.onProgress,loadP.onError);
+        // loader.load(config.planet_texture_bump_file,function(tex){
+        //     tex.anisotropy = 4;
+        //     planetMat.bumpMap = tex;
+        //     planetMat.bumpScale = 0.5;
+        //     planetMat.needsUpdate = true;
+        // },loadP.onProgress,loadP.onError);
        // earth_clouds_2048
         // loader.load(config.planet_texture_clouds_file,function(tex){
         //     cloudsMat.map = tex;
