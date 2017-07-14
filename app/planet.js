@@ -168,7 +168,7 @@ var Planet = function(configP){
         });
         var geometry = new THREE.Geometry();
         geometry.vertices = PointToPoint(p1,p2);
-        console.log(PointToPoint(p1,p2));
+        //console.log(PointToPoint(p1,p2));
         //var line = new THREE.Line( geometry, material );
        // scene.add(line);
         //planetMesh.visible = false;
@@ -240,13 +240,17 @@ var Planet = function(configP){
                 height: 5,
                 curveSegments: 12,
                 bevelEnabled: true,
-                bevelThickness: 10,
+                bevelThickness: 1,
                 bevelSize: 8,
                 bevelSegments: 5
             } );
             var tm = new THREE.Mesh(geometry,new THREE.MeshLambertMaterial({
                 color:0xee02ff
             }));
+            geometry.computeBoundingBox();
+
+			var xMid = - 0.5 * ( geometry.boundingBox.max.x - geometry.boundingBox.min.x );
+            console.log(geometry.boundingBox ,geometry.boundingBox.min.x ,geometry.center());
             tm.scale.x =  tm.scale.y =  tm.scale.z = 0.001;
             positionMesh(tm,146,25,0);
             scene.add(tm);
@@ -276,7 +280,8 @@ var Planet = function(configP){
             color: color,
             linewidth:2
         });
-        console.log(linesGroup);
+        
+        //console.log(linesGroup);
         var line = new THREE.Line( geometry, material );
         line.dynamic=dynamic;
         linesGroup.add(line);
