@@ -10,7 +10,7 @@
  * @author Luca Antiga 	/ http://lantiga.github.io
  */
 
-var viewControler = function ( object, domElement ) {
+var PlanetViewControler = function ( object, domElement ) {
 
 	var _this = this;
 	var STATE = { NONE: - 1, ROTATE: 0, ZOOM: 1, PAN: 2, TOUCH_ROTATE: 3, TOUCH_ZOOM_PAN: 4 };
@@ -607,5 +607,5 @@ var viewControler = function ( object, domElement ) {
 
 };
 
-viewControler.prototype = Object.create( THREE.EventDispatcher.prototype );
-viewControler.prototype.constructor = viewControler;
+PlanetViewControler.prototype = Object.create( THREE.EventDispatcher.prototype );
+PlanetViewControler.prototype.constructor = PlanetViewControler;

@@ -140,7 +140,7 @@ var Planet = function(configP){
         renderer.setClearColor(0xf0f0f0);
         container.appendChild(renderer.domElement);
         //viewControler control and stats
-        viewControler = new THREE.TrackballControls(camera,renderer.domElement);
+        viewControler = new PlanetViewControler(camera,renderer.domElement);
         viewControler.target.set( 0.0, 0.0, 0.0 );
         viewControler.zoomSpeed = 0.5;
         viewControler.rotateSpeed = 1.5;
