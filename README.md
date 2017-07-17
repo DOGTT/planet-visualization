@@ -19,3 +19,6 @@ need start chrome with this cmd to debug
 #### more functions is adding...
 
 ![enter image description here](http://106.14.191.146//planet_show.jpg)
+
+
+add viewControls
