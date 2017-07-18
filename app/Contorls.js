@@ -48,7 +48,7 @@ var Contorl = function(){
         gui.add( paramC, 'RayMarching' ).onChange(paramOnChange);
         //planet.setParams(params);
         gui.open();
-        for(var i = 0;i<10;i++){
+        for(var i = 0;i<50;i++){
             var s1=Math.random()-0.5;
             var s2=Math.random()-0.5;
             var e1 = Math.random()-0.5;
