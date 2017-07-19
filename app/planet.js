@@ -423,26 +423,26 @@ var Planet = function(configP){
     function loadPlanetText(){
         var loader = new THREE.TextureLoader();
         loader.setPath(config.planet_texture_path);
-        // loader.load(config.planet_texture_basic_file,function(tex){
-        //     planetMat.map = tex;
-        //     planetMat.color.set(0xffffff);
-        //     planetMat.needsUpdate = true;
-        // },loadP.onProgress,loadP.onError);
-        //  loader.load(config.planet_texture_specular_file,function(tex){
-        //     planetMat.specularMap = tex;
-        //     planetMat.needsUpdate = true;
-        // },loadP.onProgress,loadP.onError);
-        // loader.load(config.planet_texture_bump_file,function(tex){
-        //     tex.anisotropy = 4;
-        //     planetMat.bumpMap = tex;
-        //     planetMat.bumpScale = 0.5;
-        //     planetMat.needsUpdate = true;
-        // },loadP.onProgress,loadP.onError);
-       // earth_clouds_2048
-        // loader.load(config.planet_texture_clouds_file,function(tex){
-        //     cloudsMat.map = tex;
-        //     cloudsMat.needsUpdate = true;
-        // },loadP.onProgress,loadP.onError);
+        loader.load(config.planet_texture_basic_file,function(tex){
+            planetMat.map = tex;
+            planetMat.color.set(0xffffff);
+            planetMat.needsUpdate = true;
+        },loadP.onProgress,loadP.onError);
+         loader.load(config.planet_texture_specular_file,function(tex){
+            planetMat.specularMap = tex;
+            planetMat.needsUpdate = true;
+        },loadP.onProgress,loadP.onError);
+        loader.load(config.planet_texture_bump_file,function(tex){
+            tex.anisotropy = 4;
+            planetMat.bumpMap = tex;
+            planetMat.bumpScale = 0.5;
+            planetMat.needsUpdate = true;
+        },loadP.onProgress,loadP.onError);
+       //earth_clouds_2048
+        loader.load(config.planet_texture_clouds_file,function(tex){
+            cloudsMat.map = tex;
+            cloudsMat.needsUpdate = true;
+        },loadP.onProgress,loadP.onError);
     }
     function makeUniverse(){
         universeGeo = new THREE.BoxGeometry(10,10,10);
