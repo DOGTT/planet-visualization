@@ -15,7 +15,7 @@ var Contorl = function() {
     };
     var objName = {
         rayMarch: 'raymarching'
-    }
+    };
     init();
 
     function init() {
@@ -64,16 +64,18 @@ var Contorl = function() {
             let e2 = Math.random() - 0.5;
             planet.addSingleLine(new planet.LoLa(s1 * 360, s2 * 180), new planet.LoLa(-100, -50), 0xffff00);
         }
-        //planet.addSingleLine(new planet.LoLa(30, 10), new planet.LoLa(100, -10), 0xffff00);
-        // var cdsac = new THREE.BoxGeometry(0.01,0.01,0.01 );
-        // var cdaca = new THREE.MeshBasicMaterial( {wireframe:true} );
-        // var lons = 100,lats = 0;
-        // for(var i = 0;i<50;i++){
-        //     for(var j = 0;j<40;j++){
-        //     var cs = new THREE.Mesh(cdsac,cdaca);
-        //         planet.addMesh(cs,'test',lons + j*0.8,lats + i*0.8,0.2);
-        //     }
-        // }
+
+        // planet.addSingleLine(new planet.LoLa(30, 10), new planet.LoLa(100, -10), 0xffff00);
+        var cdsac = new THREE.BoxGeometry(0.01, 0.01, 0.01);
+        var cdaca = new THREE.MeshBasicMaterial({ wireframe: true });
+        var lons = 100,
+            lats = 0;
+        for (var i = 0; i < 20; i++) {
+            for (var j = 0; j < 20; j++) {
+                var cs = new THREE.Mesh(cdsac, cdaca);
+                planet.addMesh(cs, 'test', lons + j * 0.8, lats + i * 0.8, 0.2);
+            }
+        }
 
 
     }
