@@ -83,7 +83,7 @@ var Contorl = function() {
         $.getJSON('maps/' + filename, function(topodata) {
             var o = topodata.objects;
             var temp = topojson.feature(topodata, o.CHN_adm1);
-            console.log(temp);
+            //console.log(temp);
             planet.addMap(temp, "ChinaMap");
         });
         filename = "world-countries.json"; //world-50m
