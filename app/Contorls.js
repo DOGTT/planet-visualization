@@ -70,10 +70,10 @@ var Contorl = function() {
         var cdaca = new THREE.MeshBasicMaterial({ wireframe: true });
         var lons = 100,
             lats = 0;
-        for (var i = 0; i < 20; i++) {
-            for (var j = 0; j < 20; j++) {
+        for (var i = 0; i < 50; i++) {
+            for (var j = 0; j < 50; j++) {
                 var cs = new THREE.Mesh(cdsac, cdaca);
-                planet.addMesh(cs, 'test', lons + j * 0.8, lats + i * 0.8, 0.2);
+                planet.addMesh(cs, 'test', new planet.LoLa(lons + j * 0.8, lats + i * 0.8), 0.2);
             }
         }
 
