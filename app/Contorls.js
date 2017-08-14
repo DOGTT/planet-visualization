@@ -47,7 +47,7 @@ var Contorl = function() {
         var contorlGui = gui.addFolder('control');
         contorlGui.add(planet.params, 'autoRotate');
 
-        gui.add(paramC, 'RayMarching').onChange(paramOnChange);
+        contorlGui.add(paramC, 'RayMarching').onChange(paramOnChange);
         //planet.setParams(params);
         gui.open();
         for (let i = 0; i < 50; i++) {
@@ -67,8 +67,8 @@ var Contorl = function() {
 
         // planet.addSingleLine(new planet.LoLa(30, 10), new planet.LoLa(100, -10), 0xffff00);
         var cdsac = new THREE.BoxGeometry(0.01, 0.01, 0.01);
-        var cdaca = new THREE.MeshBasicMaterial({ wireframe: true });
-        var lons = 100,
+        var cdaca = new THREE.MeshBasicMaterial({ wireframe: false });
+        var lons = -100,
             lats = 0;
         for (var i = 0; i < 50; i++) {
             for (var j = 0; j < 50; j++) {
