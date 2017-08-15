@@ -82,18 +82,24 @@ var Contorl = function() {
 
     function mapLoad() {
         var filename = "china-provinces.json"; //world-50m
-        $.getJSON('maps/' + filename, function(topodata) {
-            var o = topodata.objects;
-            var temp = topojson.feature(topodata, o.CHN_adm1);
-            //console.log(temp);
-            planet.addMap(temp, "ChinaMap");
-        });
+        // $.getJSON('maps/' + filename, function(topodata) {
+        //     var o = topodata.objects;
+        //     var temp = topojson.feature(topodata, o.CHN_adm1);
+        //     var t = new Date();
+        //     console.log("c1" + t);
+        //     planet.addMap(temp, "ChinaMap");
+        //     t = new Date();
+        //     console.log("c1" + t);
+        // });
         filename = "world-countries.json"; //world-50m
         $.getJSON('maps/' + filename, function(topodata) {
             var o = topodata.objects;
             var temp = topojson.feature(topodata, o.countries1);
-            console.log(temp);
+            var t = new Date();
+            console.log("c2" + t);
             planet.addMap(temp, "worldMap");
+            t = new Date();
+            console.log("c2" + t);
         });
     }
 

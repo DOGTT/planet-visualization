@@ -160,7 +160,7 @@ var Planet = function(configP) {
         scene.add(MeshsGroup);
         scene.add(linesGroup);
         //test
-        test();
+        //test();
     }
 
     function test() {
@@ -432,6 +432,7 @@ var Planet = function(configP) {
         loader.load(config.planet_texture_clouds_file, function(tex) {
             cloudsMat.map = tex;
             cloudsMat.needsUpdate = true;
+            console.log("yes");
         }, loadP.onProgress, loadP.onError);
     }
 
