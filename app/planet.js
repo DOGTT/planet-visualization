@@ -145,7 +145,7 @@ var Planet = function(configP) {
         viewControler = new PlanetViewControler(camera, renderer.domElement);
         viewControler.target.set(0.0, 0.0, 0.0);
         viewControler.zoomSpeed = 0.05;
-        viewControler.rotateSpeed = 1.0;
+        viewControler.rotateSpeed = 5.0;
         //viewControler.enableDamping = true;
         viewControler.minDistance = 2;
         viewControler.maxDistance = 14;

@@ -12,7 +12,7 @@
 var PlanetViewControler = function(object, domElement) {
 
     var _this = this;
-    var STATE = { NONE: -1, ROTATE: 0, ZOOM: 1, PAN: 2, TOUCH_ROTATE: 3, TOUCH_ZOOM_PAN: 4 };
+    var STATE = { NONE: -1, ROTATE: 0, ZOOM: 1, PAN: 2, TOUCH_ROTATE: 3, TOUCH_ZOOM_PAN: 4, FOUSE_STATE: 5 };
 
     this.object = object;
     this.domElement = (domElement !== undefined) ? domElement : document;
@@ -582,15 +582,15 @@ var PlanetViewControler = function(object, domElement) {
 
         _prevState = _state;
         console.log("hello", event.keyCod);
-        // if (_state !== STATE.NONE) {
+        if (_state !== STATE.NONE) {
 
-        //     return;
+            return;
 
-        // } else if (event.keyCode === _this.keys[STATE.ROTATE] && !_this.noRotate) {
+        } else if (!_this.noFocus) {
 
-        //     _state = STATE.ROTATE;
+            _state = STATE.FOUSE_STATE;
 
-        // }
+        }
         // console.log("hello");
     }
     this.dispose = function() {
