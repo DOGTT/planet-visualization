@@ -27,10 +27,13 @@ var PlanetViewControler = function(object, domElement) {
     this.zoomSpeed = 1.2;
     this.panSpeed = 0.3;
 
+    this.fouseSpeed = 1.0;
+    this.fouseAngal = 1.0;
+
     this.noRotate = false;
     this.noZoom = false;
     this.noPan = false;
-    this.noTakein = false;
+    this.noFocus = false;
 
     this.staticMoving = false;
     this.dynamicDampingFactor = 0.2;
@@ -67,7 +70,7 @@ var PlanetViewControler = function(object, domElement) {
 
         _panStart = new THREE.Vector2(),
         _panEnd = new THREE.Vector2(),
-        _takeIn = new THREE.Vector2();
+        _FocusPo = new THREE.Vector3();
 
     // for reset
 
