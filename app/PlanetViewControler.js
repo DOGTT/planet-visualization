@@ -244,6 +244,12 @@ var PlanetViewControler = function(object, domElement) {
 
     };
 
+    this.FocusCamera = function() {
+        if (_state === STATE.FOUSE_STATE) {
+            _eye.multiplyScalar(0.98);
+        }
+    };
+
     this.panCamera = (function() {
 
         var mouseChange = new THREE.Vector2(),
@@ -324,7 +330,7 @@ var PlanetViewControler = function(object, domElement) {
 
         }
         if (!_this.noFocus) {
-            //_this.FocusOn();
+            _this.FocusCamera();
         }
         _this.object.position.addVectors(_this.target, _eye);
 
@@ -580,8 +586,18 @@ var PlanetViewControler = function(object, domElement) {
     function ondblclick() {
         if (_this.enabled === false) return;
 
+
+        event.preventDefault();
+        event.stopPropagation();
+
+
         _prevState = _state;
-        console.log("hello", event.keyCod);
+        if (_state === STATE.FOUSE_STATE) {
+
+            _state = STATE.NONE;
+            return;
+
+        }
         if (_state !== STATE.NONE) {
 
             return;
@@ -591,7 +607,9 @@ var PlanetViewControler = function(object, domElement) {
             _state = STATE.FOUSE_STATE;
 
         }
-        // console.log("hello");
+        _this.dispatchEvent(startEvent);
+        _this.dispatchEvent(endEvent);
+
     }
     this.dispose = function() {
 

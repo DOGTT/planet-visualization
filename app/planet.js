@@ -147,7 +147,7 @@ var Planet = function(configP) {
         viewControler.zoomSpeed = 0.05;
         viewControler.rotateSpeed = 5.0;
         //viewControler.enableDamping = true;
-        viewControler.minDistance = 2;
+        viewControler.minDistance = 3;
         viewControler.maxDistance = 14;
         viewControler.autoRotateSpeed = 1.0;
         viewControler.autoRotate = true;
@@ -577,9 +577,13 @@ var Planet = function(configP) {
         //raycaster
         raycaster.setFromCamera(mouse, camera);
         intersects = raycaster.intersectObject(planetMesh);
+        var lengthCam = camera.position.length();
+        var scaleL = 1.0 || (lengthCam / config.cameraPosR);
         if (intersects.length > 0) {
             pointerMesh.visible = true;
             pointerMesh.position.copy(intersects[0].point);
+
+            pointerMesh.scale.set(scaleL, scaleL, scaleL);
             pointerInfoUpdate(intersects[0].uv);
         } else {
             pointerMesh.visible = false;
