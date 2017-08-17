@@ -323,7 +323,9 @@ var PlanetViewControler = function(object, domElement) {
             _this.panCamera();
 
         }
-
+        if (!_this.noFocus) {
+            //_this.FocusOn();
+        }
         _this.object.position.addVectors(_this.target, _eye);
 
         _this.checkDistances();
@@ -576,13 +578,28 @@ var PlanetViewControler = function(object, domElement) {
     }
 
     function ondblclick() {
-        console.log("hello");
+        if (_this.enabled === false) return;
+
+        _prevState = _state;
+        console.log("hello", event.keyCod);
+        // if (_state !== STATE.NONE) {
+
+        //     return;
+
+        // } else if (event.keyCode === _this.keys[STATE.ROTATE] && !_this.noRotate) {
+
+        //     _state = STATE.ROTATE;
+
+        // }
+        // console.log("hello");
     }
     this.dispose = function() {
 
         this.domElement.removeEventListener('contextmenu', contextmenu, false);
         this.domElement.removeEventListener('mousedown', mousedown, false);
         this.domElement.removeEventListener('wheel', mousewheel, false);
+
+        this.domElement.removeEventListener('dblclick', ondblclick, false);
 
         this.domElement.removeEventListener('touchstart', touchstart, false);
         this.domElement.removeEventListener('touchend', touchend, false);
@@ -597,10 +614,11 @@ var PlanetViewControler = function(object, domElement) {
     };
 
     this.domElement.addEventListener('contextmenu', contextmenu, false);
-    this.domElement.addEventListener('dblclick', ondblclick, false);
+
     this.domElement.addEventListener('mousedown', mousedown, false);
     this.domElement.addEventListener('wheel', mousewheel, false);
 
+    this.domElement.addEventListener('dblclick', ondblclick, false);
 
     this.domElement.addEventListener('touchstart', touchstart, false);
     this.domElement.addEventListener('touchend', touchend, false);
