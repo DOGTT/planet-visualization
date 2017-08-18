@@ -1,8 +1,6 @@
-/**
+/**loading PlanetCamearContorl control
  * @author tide_h
- * loading PlanetCamearContorl control
- */
-/**
+ * 
  * @author Eberhard Graether / http://egraether.com/
  * @author Mark Lundin 	/ http://mark-lundin.com
  * @author Simone Manini / http://daron1337.github.io
@@ -69,11 +67,7 @@ var PlanetViewControler = function(object, domElement) {
         _zoomEnd = new THREE.Vector2(),
 
         _touchZoomDistanceStart = 0,
-        _touchZoomDistanceEnd = 0,
-
-        _panStart = new THREE.Vector2(),
-        _panEnd = new THREE.Vector2(),
-        _FocusPo = new THREE.Vector3();
+        _touchZoomDistanceEnd = 0;
 
     // for reset
 
@@ -546,7 +540,8 @@ var PlanetViewControler = function(object, domElement) {
 
                 var x = (event.touches[0].pageX + event.touches[1].pageX) / 2;
                 var y = (event.touches[0].pageY + event.touches[1].pageY) / 2;
-                _panEnd.copy(getMouseOnScreen(x, y));
+                _movePrev.copy(_moveCurr);
+                _moveCurr.copy(getMouseOnCircle(x, y));
                 break;
 
         }
