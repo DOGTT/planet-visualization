@@ -12,7 +12,7 @@
 var PlanetViewControler = function(object, domElement) {
 
     var _this = this;
-    var STATE = { NONE: -1, ROTATE: 0, ZOOM: 1, PAN: 2, TOUCH_ROTATE: 3, TOUCH_ZOOM_PAN: 4, FOUSE_STATE: 5 };
+    var STATE = { NONE: -1, ROTATEX: 0, ZOOM: 1, ROTATEY: 2, TOUCH_ROTATE: 3, TOUCH_ZOOM_ROTATEA: 4, FOUSE_STATE: 5 };
 
     this.object = object;
     this.domElement = (domElement !== undefined) ? domElement : document;
@@ -23,6 +23,9 @@ var PlanetViewControler = function(object, domElement) {
 
     this.screen = { left: 0, top: 0, width: 0, height: 0 };
 
+    this.autoRotate = false;
+    this.autoRotateSpeed = 1.0;
+
     this.rotateSpeed = 1.0;
     this.zoomSpeed = 1.2;
     this.panSpeed = 0.3;
@@ -32,7 +35,7 @@ var PlanetViewControler = function(object, domElement) {
 
     this.noRotate = false;
     this.noZoom = false;
-    this.noPan = true;
+    this.noRotateY = false;
     this.noFocus = false;
 
     this.staticMoving = false;
@@ -140,13 +143,15 @@ var PlanetViewControler = function(object, domElement) {
     var getMouseOnCircle = (function() {
 
         var vector = new THREE.Vector2();
+        var x, y;
+        return function getMouseOnCircle(pageX, pageY, getY) {
 
-        return function getMouseOnCircle(pageX, pageY) {
+            x = ((pageX - _this.screen.width * 0.5 - _this.screen.left) / (_this.screen.width * 0.5));
+            y = 0.0;
+            if (getY)
+                y = ((_this.screen.height + 2 * (_this.screen.top - pageY)) / _this.screen.width); // screen.width intentional
 
-            vector.set(
-                ((pageX - _this.screen.width * 0.5 - _this.screen.left) / (_this.screen.width * 0.5)),
-                ((_this.screen.height + 2 * (_this.screen.top - pageY)) / _this.screen.width) // screen.width intentional
-            );
+            vector.set(x, y);
 
             return vector;
 
@@ -214,7 +219,7 @@ var PlanetViewControler = function(object, domElement) {
 
         var factor;
 
-        if (_state === STATE.TOUCH_ZOOM_PAN) {
+        if (_state === STATE.TOUCH_ZOOM_ROTATEA) {
 
             factor = _touchZoomDistanceStart / _touchZoomDistanceEnd;
             _touchZoomDistanceStart = _touchZoomDistanceEnd;
@@ -276,42 +281,6 @@ var PlanetViewControler = function(object, domElement) {
 
     }());
 
-    this.panCamera = (function() {
-
-        var mouseChange = new THREE.Vector2(),
-            objectUp = new THREE.Vector3(),
-            pan = new THREE.Vector3();
-
-        return function panCamera() {
-
-            mouseChange.copy(_panEnd).sub(_panStart);
-
-            if (mouseChange.lengthSq()) {
-
-                mouseChange.multiplyScalar(_eye.length() * _this.panSpeed);
-
-                pan.copy(_eye).cross(_this.object.up).setLength(mouseChange.x);
-                pan.add(objectUp.copy(_this.object.up).setLength(mouseChange.y));
-
-                _this.object.position.add(pan);
-                _this.target.add(pan);
-
-                if (_this.staticMoving) {
-
-                    _panStart.copy(_panEnd);
-
-                } else {
-
-                    _panStart.add(mouseChange.subVectors(_panEnd, _panStart).multiplyScalar(_this.dynamicDampingFactor));
-
-                }
-
-            }
-
-        };
-
-    }());
-
     this.checkDistances = function() {
 
         if (!_this.noZoom || !_this.noPan) {
@@ -338,6 +307,11 @@ var PlanetViewControler = function(object, domElement) {
 
         _eye.subVectors(_this.object.position, _this.target);
 
+        if (_this.autoRotate && _state === STATE.NONE) {
+            _movePrev.set(0, 0);
+            _moveCurr.set(0.01 * _this.autoRotateSpeed, 0);
+        }
+
         if (!_this.noRotate) {
 
             _this.rotateCamera();
@@ -350,13 +324,10 @@ var PlanetViewControler = function(object, domElement) {
 
         }
 
-        if (!_this.noPan) {
-
-            _this.panCamera();
-
-        }
         if (!_this.noFocus) {
+
             _this.FocusCamera();
+
         }
         _this.object.position.addVectors(_this.target, _eye);
 
@@ -407,17 +378,17 @@ var PlanetViewControler = function(object, domElement) {
 
             return;
 
-        } else if (event.keyCode === _this.keys[STATE.ROTATE] && !_this.noRotate) {
+        } else if (event.keyCode === _this.keys[STATE.ROTATEX] && !_this.noRotate) {
 
-            _state = STATE.ROTATE;
+            _state = STATE.ROTATEX;
 
         } else if (event.keyCode === _this.keys[STATE.ZOOM] && !_this.noZoom) {
 
             _state = STATE.ZOOM;
 
-        } else if (event.keyCode === _this.keys[STATE.PAN] && !_this.noPan) {
+        } else if (event.keyCode === _this.keys[STATE.ROTATEY] && !_this.noPan) {
 
-            _state = STATE.PAN;
+            _state = STATE.ROTATEY;
 
         }
 
@@ -446,7 +417,7 @@ var PlanetViewControler = function(object, domElement) {
 
         }
 
-        if (_state === STATE.ROTATE && !_this.noRotate) {
+        if (_state === STATE.ROTATEX && !_this.noRotate) {
 
             _moveCurr.copy(getMouseOnCircle(event.pageX, event.pageY));
             _movePrev.copy(_moveCurr);
@@ -456,10 +427,10 @@ var PlanetViewControler = function(object, domElement) {
             _zoomStart.copy(getMouseOnScreen(event.pageX, event.pageY));
             _zoomEnd.copy(_zoomStart);
 
-        } else if (_state === STATE.PAN && !_this.noPan) {
+        } else if (_state === STATE.ROTATEY && !_this.noRotateY) {
 
-            _panStart.copy(getMouseOnScreen(event.pageX, event.pageY));
-            _panEnd.copy(_panStart);
+            _moveCurr.copy(getMouseOnCircle(event.pageX, event.pageY, true));
+            _movePrev.copy(_moveCurr);
 
         }
 
@@ -477,7 +448,7 @@ var PlanetViewControler = function(object, domElement) {
         event.preventDefault();
         event.stopPropagation();
 
-        if (_state === STATE.ROTATE && !_this.noRotate) {
+        if (_state === STATE.ROTATEX && !_this.noRotate) {
 
             _movePrev.copy(_moveCurr);
             _moveCurr.copy(getMouseOnCircle(event.pageX, event.pageY));
@@ -486,9 +457,10 @@ var PlanetViewControler = function(object, domElement) {
 
             _zoomEnd.copy(getMouseOnScreen(event.pageX, event.pageY));
 
-        } else if (_state === STATE.PAN && !_this.noPan) {
+        } else if (_state === STATE.ROTATEY && !_this.noRotateY) {
 
-            _panEnd.copy(getMouseOnScreen(event.pageX, event.pageY));
+            _movePrev.copy(_moveCurr);
+            _moveCurr.copy(getMouseOnCircle(event.pageX, event.pageY, true));
 
         }
 
@@ -536,15 +508,15 @@ var PlanetViewControler = function(object, domElement) {
                 break;
 
             default: // 2 or more
-                _state = STATE.TOUCH_ZOOM_PAN;
+                _state = STATE.TOUCH_ZOOM_ROTATEA;
                 var dx = event.touches[0].pageX - event.touches[1].pageX;
                 var dy = event.touches[0].pageY - event.touches[1].pageY;
                 _touchZoomDistanceEnd = _touchZoomDistanceStart = Math.sqrt(dx * dx + dy * dy);
 
                 var x = (event.touches[0].pageX + event.touches[1].pageX) / 2;
                 var y = (event.touches[0].pageY + event.touches[1].pageY) / 2;
-                _panStart.copy(getMouseOnScreen(x, y));
-                _panEnd.copy(_panStart);
+                _moveCurr.copy(getMouseOnCircle(x, y, true));
+                _movePrev.copy(_moveCurr);
                 break;
 
         }
@@ -618,12 +590,7 @@ var PlanetViewControler = function(object, domElement) {
 
 
         _prevState = _state;
-        if (_state === STATE.FOUSE_STATE) {
 
-            _state = STATE.NONE;
-            return;
-
-        }
         if (_state !== STATE.NONE) {
 
             return;
