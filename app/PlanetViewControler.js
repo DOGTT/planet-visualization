@@ -28,7 +28,7 @@ var PlanetViewControler = function(object, domElement) {
     this.panSpeed = 0.3;
 
     this.fouseSpeed = 1.0;
-    this.fouseAngal = 1.0;
+    this.fouseTarget = new THREE.Vector3(-1, 0, 0);
 
     this.noRotate = false;
     this.noZoom = false;
@@ -244,11 +244,37 @@ var PlanetViewControler = function(object, domElement) {
 
     };
 
-    this.FocusCamera = function() {
-        if (_state === STATE.FOUSE_STATE) {
-            _eye.multiplyScalar(0.98);
-        }
-    };
+    this.FocusCamera = (function() {
+        var fouseT = new THREE.Vector3(),
+            scalar,
+            count, i = 0,
+            flagFocus = false;
+        fouseT.copy(_this.fouseTarget);
+        scalar = 0.02 * _this.fouseSpeed;
+        fouseT = fouseT.sub(_this.target0).multiplyScalar(scalar);
+        count = Math.round(1.0 / scalar);
+        return function FocusCamera() {
+            if (_state === STATE.FOUSE_STATE) {
+                i++;
+                if (i > count) {
+                    _prevState = _state;
+                    _state = STATE.NONE;
+                    i = 0;
+                    flagFocus = !flagFocus;
+                    return;
+                }
+                if (flagFocus) {
+                    _eye.multiplyScalar(1.0 + scalar);
+                    _this.target.sub(fouseT);
+                } else {
+                    _eye.multiplyScalar(1.0 - scalar);
+                    _this.target.add(fouseT);
+                }
+                //console.log(fouseT);
+            }
+        };
+
+    }());
 
     this.panCamera = (function() {
 

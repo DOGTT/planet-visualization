@@ -147,7 +147,7 @@ var Planet = function(configP) {
         viewControler.zoomSpeed = 0.05;
         viewControler.rotateSpeed = 5.0;
         //viewControler.enableDamping = true;
-        viewControler.minDistance = 3;
+        viewControler.minDistance = 5;
         viewControler.maxDistance = 14;
         viewControler.autoRotateSpeed = 1.0;
         viewControler.autoRotate = true;
@@ -159,6 +159,13 @@ var Planet = function(configP) {
         MeshsGroup = new THREE.Group();
         scene.add(MeshsGroup);
         scene.add(linesGroup);
+
+        function keydown(event) {
+            if (event.keyCode === 82) {
+                viewControler.reset();
+            }
+        }
+        window.addEventListener('keydown', keydown, false);
         //test
         //test();
     }
