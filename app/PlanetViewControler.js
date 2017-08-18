@@ -32,7 +32,7 @@ var PlanetViewControler = function(object, domElement) {
 
     this.noRotate = false;
     this.noZoom = false;
-    this.noPan = false;
+    this.noPan = true;
     this.noFocus = false;
 
     this.staticMoving = false;
