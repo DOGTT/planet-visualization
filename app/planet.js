@@ -145,11 +145,11 @@ var Planet = function(configP) {
         viewControler = new PlanetViewControler(camera, renderer.domElement);
         viewControler.target.set(0.0, 0.0, 0.0);
         viewControler.zoomSpeed = 0.05;
-        viewControler.rotateSpeed = 5.0;
+        viewControler.rotateSpeed = 4.0;
         //viewControler.enableDamping = true;
-        viewControler.minDistance = 5;
+        viewControler.minDistance = 4;
         viewControler.maxDistance = 14;
-        viewControler.autoRotateSpeed = 1.0;
+        viewControler.autoRotateSpeed = 0.5;
         viewControler.autoRotate = true;
         stats = new Stats();
         container.appendChild(stats.dom);
