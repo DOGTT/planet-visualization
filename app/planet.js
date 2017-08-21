@@ -10,7 +10,8 @@
 var Planet = function(configP, domElement) {
     'use strict';
     if (!Detector.webgl) Detector.addGetWebGLMessage();
-    this.domElement = (domElement !== undefined) ? domElement : document;
+    var _this = this;
+    this.domElement = (domElement !== undefined) ? domElement : document.body;
     var LoLa = function(lo, la) {
         this.lo = lo;
         this.la = la;
@@ -19,7 +20,7 @@ var Planet = function(configP, domElement) {
         this.laF = null;
         this.valid = false;
     };
-    var config_default = {
+    this.config = {
         cloudShow: false,
         textShow: false,
         nameShow: false,
@@ -57,12 +58,13 @@ var Planet = function(configP, domElement) {
         }
 
     };
-    var config = config_default;
     if (configP !== undefined) {
         for (var item in configP) {
-            config[item] = configP[item];
+            _this.config[item] = configP[item];
         }
     }
+    // methods
+
 
     var DefaultMeshName = "nameless";
     var sunLight;
@@ -70,7 +72,7 @@ var Planet = function(configP, domElement) {
     var planetCenter = new THREE.Vector3(0, 0, 0);
     var container, camera, scene, renderer;
     //renderTargets
-    var renderTargets = new Object();
+    var renderTargets = {};
 
     var sceneForRT, cameraForRT;
     var viewControler, stats, loadP;
@@ -85,11 +87,26 @@ var Planet = function(configP, domElement) {
     var i, j;
     var mouse = new THREE.Vector2();
     var raycaster, intersects, pointerMesh;
-
     var pointerLoLa = new LoLa();
-    var viewSize = new THREE.Vector2(window.innerWidth, window.innerHeight);
-    var windowHalfX = viewSize.x / 2;
-    var windowHalfY = viewSize.y / 2;
+    this.viewSize = new THREE.Vector2(0, 0);
+    this.handleResize = function() {
+
+        if (this.domElement === document.body) {
+
+            this.viewSize.x = window.innerWidth;
+            this.viewSize.y = window.innerHeight;
+
+        } else {
+
+            var box = this.domElement.getBoundingClientRect();
+            this.viewSize.x = box.width;
+            this.viewSize.y = box.height;
+
+        }
+
+    };
+    _this.handleResize();
+
     init();
     makeAmbient();
     animate();
@@ -100,7 +117,7 @@ var Planet = function(configP, domElement) {
     //init function
     function init() {
         container = document.createElement('div');
-        domElement.appendChild(container);
+        _this.domElement.appendChild(container);
         //LoadProgress
         loadP = new LoadProgress();
         container.appendChild(loadP.dom);
@@ -113,20 +130,20 @@ var Planet = function(configP, domElement) {
         //scene.fog = new THREE.Fog(config.colorPlant,config.cameraPosR-(config.planetR/2),config.cameraPosR);//0xf2f7ff
 
         //camera
-        camera = new THREE.PerspectiveCamera(10, viewSize.x / viewSize.y, 1, 2000);
-        camera.position.set(0, 0, -config.cameraPosR);
+        camera = new THREE.PerspectiveCamera(10, _this.viewSize.x / _this.viewSize.y, 1, 2000);
+        camera.position.set(0, 0, -_this.config.cameraPosR);
         camera.lookAt(new THREE.Vector3(0, 0, 0));
         scene.add(camera);
         //cameraForRT.copy(camera);
         //sceneForRT.add(cameraForRT);
 
-        universeCamera = new THREE.PerspectiveCamera(90, viewSize.x / viewSize.y, 1, 2000);
+        universeCamera = new THREE.PerspectiveCamera(90, _this.viewSize.x / _this.viewSize.y, 1, 2000);
 
         //light
         var ambient = new THREE.AmbientLight(0xcccccc);
         scene.add(ambient);
-        sunLight = new THREE.DirectionalLight(0xffffff, config.sunLightPower);
-        sunLight.position.set(config.sunR, config.sunR, 0 - config.sunR);
+        sunLight = new THREE.DirectionalLight(0xffffff, _this.config.sunLightPower);
+        sunLight.position.set(_this.config.sunR, _this.config.sunR, 0 - _this.config.sunR);
         scene.add(sunLight);
 
         //make a planet
@@ -140,7 +157,7 @@ var Planet = function(configP, domElement) {
             antialias: true
         });
         renderer.setPixelRatio(window.devicePixelRatio);
-        renderer.setSize(viewSize.x, viewSize.y);
+        renderer.setSize(_this.viewSize.x, _this.viewSize.y);
         renderer.setClearColor(0xf0f0f0);
         container.appendChild(renderer.domElement);
         //viewControler control and stats
@@ -207,7 +224,7 @@ var Planet = function(configP, domElement) {
             transparent: true
         });
         var floader = new FileLoader();
-        floader.setPath(config.universe_texture_shader_path);
+        floader.setPath(_this.config.universe_texture_shader_path);
         var shader_name = ["particles.vs", "particles.fs"];
         floader.loadShader(shader_name).then(
             function() {
@@ -292,7 +309,7 @@ var Planet = function(configP, domElement) {
 
     function makeLoLaLine() {
         //Lo,LaN,distance
-        var R = config.planetR * 1.001;
+        var R = _this.config.planetR * 1.001;
         var LolaN = [
             [0, 0, 10],
             [9, 5, 8],
@@ -334,7 +351,7 @@ var Planet = function(configP, domElement) {
     function makePlanet() {
         planetGeo = new THREE.SphereGeometry(1, 200, 100);
         planetMat = new THREE.MeshPhongMaterial({
-            color: config.colorPlant,
+            color: _this.config.colorPlant,
             shininess: 20
         });
         planetMesh = new THREE.Mesh(planetGeo, planetMat);
@@ -421,24 +438,24 @@ var Planet = function(configP, domElement) {
 
     function loadPlanetText() {
         var loader = new THREE.TextureLoader();
-        loader.setPath(config.planet_texture_path);
-        loader.load(config.planet_texture_basic_file, function(tex) {
+        loader.setPath(_this.config.planet_texture_path);
+        loader.load(_this.config.planet_texture_basic_file, function(tex) {
             planetMat.map = tex;
             planetMat.color.set(0xffffff);
             planetMat.needsUpdate = true;
         }, loadP.onProgress, loadP.onError);
-        loader.load(config.planet_texture_specular_file, function(tex) {
+        loader.load(_this.config.planet_texture_specular_file, function(tex) {
             planetMat.specularMap = tex;
             planetMat.needsUpdate = true;
         }, loadP.onProgress, loadP.onError);
-        loader.load(config.planet_texture_bump_file, function(tex) {
+        loader.load(_this.config.planet_texture_bump_file, function(tex) {
             tex.anisotropy = 4;
             planetMat.bumpMap = tex;
             planetMat.bumpScale = 0.5;
             planetMat.needsUpdate = true;
         }, loadP.onProgress, loadP.onError);
         //earth_clouds_2048
-        loader.load(config.planet_texture_clouds_file, function(tex) {
+        loader.load(_this.config.planet_texture_clouds_file, function(tex) {
             cloudsMat.map = tex;
             cloudsMat.needsUpdate = true;
             console.log("yes");
@@ -455,11 +472,11 @@ var Planet = function(configP, domElement) {
 
     function loadUniverseText() {
         var loader = new THREE.CubeTextureLoader();
-        loader.setPath(config.universe_texture_path);
-        var urls = config.universe_texture_basic_file;
+        loader.setPath(_this.config.universe_texture_path);
+        var urls = _this.config.universe_texture_basic_file;
         var floader = new FileLoader();
-        floader.setPath(config.universe_texture_shader_path);
-        var shader_name = config.universe_texture_shader_file;
+        floader.setPath(_this.config.universe_texture_shader_path);
+        var shader_name = _this.config.universe_texture_shader_file;
         floader.loadShader(shader_name).then(
             function() {
                 loader.load(urls, function(tex) {
@@ -541,7 +558,7 @@ var Planet = function(configP, domElement) {
         var lengthCam = camera.position.length();
         if (lengthCam > 12) {
             scene.fog.far = lengthCam;
-            scene.fog.near = lengthCam - (config.planetR / 2);
+            scene.fog.near = lengthCam - (_this.config.planetR / 2);
         } else {
             scene.fog.near = 1;
             scene.fog.far = 1000;
@@ -587,7 +604,7 @@ var Planet = function(configP, domElement) {
         raycaster.setFromCamera(mouse, camera);
         intersects = raycaster.intersectObject(planetMesh);
         var lengthCam = camera.position.length();
-        var scaleL = 1.0 || (lengthCam / config.cameraPosR);
+        var scaleL = 1.0 || (lengthCam / _this.config.cameraPosR);
         if (intersects.length > 0) {
             pointerMesh.visible = true;
             pointerMesh.position.copy(intersects[0].point);
@@ -609,10 +626,10 @@ var Planet = function(configP, domElement) {
         var t = UVconvertTOLoLa(O);
         var tx = t.lo;
         var ty = t.la;
-        var N = config.DirectionText.N || 'N',
-            S = config.DirectionText.S || 'S',
-            W = config.DirectionText.W || 'W',
-            E = config.DirectionText.E || 'E';
+        var N = _this.config.DirectionText.N || 'N',
+            S = _this.config.DirectionText.S || 'S',
+            W = _this.config.DirectionText.W || 'W',
+            E = _this.config.DirectionText.E || 'E';
         if (tx < 0) pointerLoLa.loF = W + Math.abs(tx);
         else pointerLoLa.loF = E + tx;
         if (ty < 0) pointerLoLa.laF = S + Math.abs(ty);
@@ -638,7 +655,7 @@ var Planet = function(configP, domElement) {
     function LoLaconvertToXYZ(lola) {
         var lo = lola.lo / 180.0;
         var la = lola.la / 180.0;
-        var r = config.planetR;
+        var r = _this.config.planetR;
         var pos = new THREE.Vector3();
         pos.y = r * (Math.sin((la) * PI));
         var t_lo;
@@ -659,7 +676,7 @@ var Planet = function(configP, domElement) {
         var x = position.x;
         var y = position.y;
         var z = position.z;
-        var r = config.planetR;
+        var r = _this.config.planetR;
         var rt = new LoLa();
         rt.lo = Math.abs(Math.atan(z / x) / PI);
         if (x < 0.0) rt.lo = (1.0 - rt.lo);
@@ -695,9 +712,9 @@ var Planet = function(configP, domElement) {
 
     function controlPart() {
         //lanetMesh.visible = false;
-        cloudMesh.visible = config.cloudShow;
-        loLaLineLod.visible = config.lolaLinesShow;
-        viewControler.autoRotate = config.autoRotate;
+        cloudMesh.visible = _this.config.cloudShow;
+        loLaLineLod.visible = _this.config.lolaLinesShow;
+        viewControler.autoRotate = _this.config.autoRotate;
     }
 
     function makeMapLines(arrs, R) {
@@ -717,7 +734,7 @@ var Planet = function(configP, domElement) {
     }
 
     function makeMapMesh(data) {
-        var R = config.planetR * 1.001;
+        var R = _this.config.planetR * 1.001;
         if (data.type != "FeatureCollection") return;
         var features = data.features;
         var mapG = new THREE.Group();
@@ -750,87 +767,82 @@ var Planet = function(configP, domElement) {
 
     }
 
-    return {
-        /**
-         * @param 
-         * lo and la is from the left-down corner
-         */
-        addMesh: function(mesh, name, lola, height) {
-            if (!(mesh instanceof THREE.Mesh))
-                return 0;
-            var lola = lola !== undefined ? lola : new LoLa(0, 0),
-                name = name !== undefined ? name : DefaultMeshName,
-                height = height !== undefined ? height : 0;
-            positionMesh(mesh, lola.lo, lola.la, height);
-            mesh.name = name;
-            MeshsGroup.add(mesh);
-        },
-        addMeshToRT: function(mesh, name, lola, height) {
-            if (!(mesh instanceof THREE.Mesh))
-                return 0;
-            var lola = lola !== undefined ? lola : new LoLa(0, 0),
-                name = name !== undefined ? name : DefaultMeshName,
-                height = height !== undefined ? height : 0;
-            positionMesh(mesh, lola.lo, lola.la, height);
-            mesh.name = name;
-            sceneForRT.add(mesh);
-        },
-        addRenderTarget: function(rt, name) {
-            if (!(rt instanceof THREE.WebGLRenderTarget))
-                return 0;
-            var name = name !== undefined ? name : DefaultMeshName;
-            renderTargets[name] = rt;
-        },
-        addSingleLine: function(lolaS, lolaE, color) {
-            var color = color !== undefined ? color : 0xffffff;
-            if (lolaS instanceof LoLa && lolaE instanceof LoLa) {
-                addLine(lolaS, lolaE, color, true);
-            }
-        },
-        addAnimationLines: function(pointSArray, pointEArray) {
-            if (pointSArray.length === pointEArray.length) {
-                for (let i = 0; i < pointEArray.length; i++) {
-
-                }
-            }
-
-        },
-        romoveMesh: function(name) {
-            var name = name !== undefined ? name : DefaultMeshName;
-            MeshsGroup.remove(MeshsGroup.getObjectByName(name));
-        },
-        romoveMeshFromRT: function(name) {
-            var name = name !== undefined ? name : DefaultMeshName;
-            sceneForRT.remove(sceneForRT.getObjectByName(name));
-        },
-        removeRenderTarget: function(name) {
-            var name = name !== undefined ? name : DefaultMeshName;
-            for (var rt in renderTargets) {
-                if (rt === name) {
-                    renderer.clearTarget(renderTargets[rt]);
-                    delete renderTargets[rt];
-                }
+    /**
+     * @param 
+     * lo and la is from the left-down corner
+     */
+    this.addMesh = function(mesh, name, lola, height) {
+        if (!(mesh instanceof THREE.Mesh))
+            return 0;
+        var lola = lola !== undefined ? lola : new LoLa(0, 0),
+            name = name !== undefined ? name : DefaultMeshName,
+            height = height !== undefined ? height : 0;
+        positionMesh(mesh, lola.lo, lola.la, height);
+        mesh.name = name;
+        MeshsGroup.add(mesh);
+    };
+    this.addMeshToRT = function(mesh, name, lola, height) {
+        if (!(mesh instanceof THREE.Mesh))
+            return 0;
+        var lola = lola !== undefined ? lola : new LoLa(0, 0),
+            name = name !== undefined ? name : DefaultMeshName,
+            height = height !== undefined ? height : 0;
+        positionMesh(mesh, lola.lo, lola.la, height);
+        mesh.name = name;
+        sceneForRT.add(mesh);
+    };
+    this.addRenderTarget = function(rt, name) {
+        if (!(rt instanceof THREE.WebGLRenderTarget))
+            return 0;
+        var name = name !== undefined ? name : DefaultMeshName;
+        renderTargets[name] = rt;
+    };
+    this.addSingleLine = function(lolaS, lolaE, color) {
+        var color = color !== undefined ? color : 0xffffff;
+        if (lolaS instanceof LoLa && lolaE instanceof LoLa) {
+            addLine(lolaS, lolaE, color, true);
+        }
+    };
+    this.addAnimationLines = function(pointSArray, pointEArray) {
+        if (pointSArray.length === pointEArray.length) {
+            for (let i = 0; i < pointEArray.length; i++) {
 
             }
-        },
-        /**
-         * add GeoJSON data to planet surface
-         */
-        addMap: function(data, mapname) {
-            var meshMap = makeMapMesh(data);
-            meshMap.name = mapname;
-            scene.add(meshMap);
-        },
-        params: config,
-        setMouse: function(v) {
-            mouse = v;
-        },
-        pointerLoLa: pointerLoLa,
-        container: container,
-        LoLa: LoLa
-    }
-    //exports.Vector3 = Vector3;
+        }
 
+    };
+    this.romoveMesh = function(name) {
+        var name = name !== undefined ? name : DefaultMeshName;
+        MeshsGroup.remove(MeshsGroup.getObjectByName(name));
+    };
+    this.romoveMeshFromRT = function(name) {
+        var name = name !== undefined ? name : DefaultMeshName;
+        sceneForRT.remove(sceneForRT.getObjectByName(name));
+    };
+    this.removeRenderTarget = function(name) {
+        var name = name !== undefined ? name : DefaultMeshName;
+        for (var rt in renderTargets) {
+            if (rt === name) {
+                renderer.clearTarget(renderTargets[rt]);
+                delete renderTargets[rt];
+            }
+
+        }
+    };
+    /**
+     * add GeoJSON data to planet surface
+     */
+    this.addMap = function(data, mapname) {
+        var meshMap = makeMapMesh(data);
+        meshMap.name = mapname;
+        scene.add(meshMap);
+    };
+    this.setMouse = function(v) {
+        mouse = v;
+    };
+    this.pointerLoLa = pointerLoLa;
+    this.container = this.domElement;
+    this.LoLa = LoLa;
 
 
 };

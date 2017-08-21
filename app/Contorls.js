@@ -3,8 +3,10 @@
  * Contorl part
  * need update
  */
-var Contorl = function() {
+var Contorl = (function() {
     'use strict';
+    var container = document.createElement('div');
+    document.body.appendChild(container);
     var planet = new Planet({
         cloudShow: false,
         textShow: false
@@ -22,7 +24,7 @@ var Contorl = function() {
 
         var latlon = document.createElement('div');
         latlon.style.cssText = 'position:fixed;bottom:2.5%;right:1%;opacity:0.9;z-index:10000';
-        planet.container.appendChild(latlon);
+        container.appendChild(latlon);
 
         document.addEventListener('mousemove', onDocumentMouseMove, false);
 
@@ -42,10 +44,10 @@ var Contorl = function() {
         mapLoad();
         var gui = new dat.GUI();
         var textureGui = gui.addFolder('texture');
-        textureGui.add(planet.params, 'lolaLinesShow');
-        textureGui.add(planet.params, 'cloudShow');
+        textureGui.add(planet.config, 'lolaLinesShow');
+        textureGui.add(planet.config, 'cloudShow');
         var contorlGui = gui.addFolder('control');
-        contorlGui.add(planet.params, 'autoRotate');
+        contorlGui.add(planet.config, 'autoRotate');
 
         contorlGui.add(paramC, 'RayMarching').onChange(paramOnChange);
         //planet.setParams(params);
@@ -127,5 +129,4 @@ var Contorl = function() {
     }
 
     //console.log(planet);
-};
-Contorl();
+}());
