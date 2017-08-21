@@ -1,22 +1,24 @@
 /**
  * @author tide_h
  * make a planet 
+ * @configP 
+ * @domElement
  */
 
 
 
-var Planet = function(configP) {
+var Planet = function(configP, domElement) {
     'use strict';
     if (!Detector.webgl) Detector.addGetWebGLMessage();
-
-    function LoLa(lo, la) {
+    this.domElement = (domElement !== undefined) ? domElement : document;
+    var LoLa = function(lo, la) {
         this.lo = lo;
         this.la = la;
         //the description of lalo
         this.loF = null;
         this.laF = null;
         this.valid = false;
-    }
+    };
     var config_default = {
         cloudShow: false,
         textShow: false,
@@ -57,7 +59,7 @@ var Planet = function(configP) {
     };
     var config = config_default;
     if (configP !== undefined) {
-        for (let item in configP) {
+        for (var item in configP) {
             config[item] = configP[item];
         }
     }
@@ -98,7 +100,7 @@ var Planet = function(configP) {
     //init function
     function init() {
         container = document.createElement('div');
-        document.body.appendChild(container);
+        domElement.appendChild(container);
         //LoadProgress
         loadP = new LoadProgress();
         container.appendChild(loadP.dom);
