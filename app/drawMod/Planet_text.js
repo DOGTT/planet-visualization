@@ -1,26 +1,38 @@
  //text
- var loader = new THREE.FontLoader();
+ Planet.prototype.setTextMesh = function(str) {
 
- loader.load('fonts/helvetiker_regular.typeface.json', function(font) {
-
-     var geometry = new THREE.TextGeometry('Hello World!', {
-         font: font,
+     var Text = str || "null String";
+     this._fontMeshConfig = {
+         TypeFaceFile: 'fonts/helvetiker_regular.typeface.json',
          size: 80,
          height: 5,
          curveSegments: 12,
-         bevelEnabled: true,
-         bevelThickness: 1,
-         bevelSize: 8,
-         bevelSegments: 5
-     });
-     var tm = new THREE.Mesh(geometry, new THREE.MeshLambertMaterial({
-         color: 0xee02ff
-     }));
-     geometry.computeBoundingBox();
 
-     var xMid = -0.5 * (geometry.boundingBox.max.x - geometry.boundingBox.min.x);
-     console.log(geometry.boundingBox, geometry.boundingBox.min.x, geometry.center());
-     tm.scale.x = tm.scale.y = tm.scale.z = 0.001;
-     positionMesh(tm, 146, 25, 0);
-     scene.add(tm);
- });
+     };
+     var _this = this;
+     var loader = new THREE.FontLoader();
+
+     loader.load(_this._fontMeshConfig.TypeFaceFile, function(font) {
+
+         var geometry = new THREE.TextGeometry(Text, {
+             font: font,
+             size: _this._fontMeshConfig.size,
+             height: _this._fontMeshConfig.height,
+             curveSegments: _this._fontMeshConfig.curveSegments,
+             bevelEnabled: true,
+             bevelThickness: 1,
+             bevelSize: 8,
+             bevelSegments: 5
+         });
+         var tm = new THREE.Mesh(geometry, new THREE.MeshLambertMaterial({
+             color: 0xee02ff
+         }));
+         geometry.computeBoundingBox();
+
+         var xMid = -0.5 * (geometry.boundingBox.max.x - geometry.boundingBox.min.x);
+         console.log(geometry.boundingBox, geometry.boundingBox.min.x, geometry.center());
+         tm.scale.x = tm.scale.y = tm.scale.z = 0.001;
+         positionMesh(tm, 146, 25, 0);
+         scene.add(tm);
+     });
+ };

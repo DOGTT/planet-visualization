@@ -5,8 +5,6 @@
  * @domElement
  */
 
-
-
 var Planet = function(configP, domElement) {
     'use strict';
     if (!Detector.webgl) Detector.addGetWebGLMessage();
@@ -70,11 +68,13 @@ var Planet = function(configP, domElement) {
     var sunLight;
     var PI = Math.PI;
     var planetCenter = new THREE.Vector3(0, 0, 0);
-    var container, camera, scene, renderer;
+    var container, camera, renderer;
+    this.scene = null;
     //renderTargets
-    var renderTargets = {};
 
-    var sceneForRT, cameraForRT;
+    var cameraForRT;
+    this.sceneForRT = null;
+    this.renderTargets = {};
     var viewControler, stats, loadP;
     //planet texture
     var planetMesh, planetMat, planetGeo, cloudMesh, cloudsMat;
@@ -124,16 +124,16 @@ var Planet = function(configP, domElement) {
         loadPlanetText();
         loadUniverseText();
         //scene
-        scene = new THREE.Scene();
+        _this.scene = new THREE.Scene();
         universeScene = new THREE.Scene();
-        sceneForRT = new THREE.Scene();
+        _this.sceneForRT = new THREE.Scene();
         //scene.fog = new THREE.Fog(config.colorPlant,config.cameraPosR-(config.planetR/2),config.cameraPosR);//0xf2f7ff
 
         //camera
         camera = new THREE.PerspectiveCamera(10, _this.viewSize.x / _this.viewSize.y, 1, 2000);
         camera.position.set(0, 0, -_this.config.cameraPosR);
         camera.lookAt(new THREE.Vector3(0, 0, 0));
-        scene.add(camera);
+        _this.scene.add(camera);
         //cameraForRT.copy(camera);
         //sceneForRT.add(cameraForRT);
 
@@ -141,10 +141,10 @@ var Planet = function(configP, domElement) {
 
         //light
         var ambient = new THREE.AmbientLight(0xcccccc);
-        scene.add(ambient);
+        _this.scene.add(ambient);
         sunLight = new THREE.DirectionalLight(0xffffff, _this.config.sunLightPower);
         sunLight.position.set(_this.config.sunR, _this.config.sunR, 0 - _this.config.sunR);
-        scene.add(sunLight);
+        _this.scene.add(sunLight);
 
         //make a planet
         makePlanet();
@@ -172,12 +172,12 @@ var Planet = function(configP, domElement) {
         viewControler.autoRotate = true;
         stats = new Stats();
         container.appendChild(stats.dom);
-        scene.add(drawAxes(2));
+        _this.scene.add(drawAxes(2));
 
         linesGroup = new THREE.Group();
         MeshsGroup = new THREE.Group();
-        scene.add(MeshsGroup);
-        scene.add(linesGroup);
+        _this.scene.add(MeshsGroup);
+        _this.scene.add(linesGroup);
 
         function keydown(event) {
             if (event.keyCode === 82) {
@@ -260,7 +260,7 @@ var Planet = function(configP, domElement) {
         var material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
         pointerMesh = new THREE.Mesh(geometry, material);
         pointerMesh.visible = false;
-        scene.add(pointerMesh);
+        _this.scene.add(pointerMesh);
     }
 
     function makeLoLaLine() {
@@ -301,7 +301,7 @@ var Planet = function(configP, domElement) {
         }
         loLaLineLod.updateMatrix();
         loLaLineLod.matrixAutoUpdate = false;
-        scene.add(loLaLineLod);
+        _this.scene.add(loLaLineLod);
     }
 
     function makePlanet() {
@@ -317,8 +317,8 @@ var Planet = function(configP, domElement) {
             depthTest: false
         });
         cloudMesh = new THREE.Mesh(planetGeo, cloudsMat);
-        scene.add(planetMesh);
-        scene.add(cloudMesh);
+        _this.scene.add(planetMesh);
+        _this.scene.add(cloudMesh);
         var atmoShader = {
             side: THREE.BackSide,
             // blending: THREE.AdditiveBlending,
@@ -385,7 +385,7 @@ var Planet = function(configP, domElement) {
         var planetAtmoMat = new THREE.ShaderMaterial(atmoShader);
         var planetAtmoMesh = new THREE.Mesh(planetGeo, planetAtmoMat);
         planetAtmoMesh.scale.set(1.1, 1.1, 1.1);
-        scene.add(planetAtmoMesh);
+        _this.scene.add(planetAtmoMesh);
         ///
         //     var geo = new THREE.SphereGeometry(1.1,100,50);
         //    var mat = new THREE.MeshBasicMaterial({color:0xcccccc,opacity:0.1,transparent :true});
@@ -476,17 +476,17 @@ var Planet = function(configP, domElement) {
         spangleStar_contorl();
         ProssRT_render();
         lines_render();
-        renderer.render(scene, camera);
+        renderer.render(_this.scene, camera);
         //renderer.clearColor ();
     }
 
     function renderTimeControl() {
         var t = (new Date()).getTime();
-        if (scene.timeNow !== undefined) {
-            scene.timeDifference = t - scene.timeNow;
+        if (_this.scene.timeNow !== undefined) {
+            _this.scene.timeDifference = t - _this.scene.timeNow;
         } else {
-            scene.timeNow = t;
-            scene.timeDifference = 0;
+            _this.scene.timeNow = t;
+            _this.scene.timeDifference = 0;
         }
     }
 
@@ -498,7 +498,7 @@ var Planet = function(configP, domElement) {
                 if (line instanceof THREE.Line) {
                     if (line.dynamic) {
                         var n = line.geometry.attributes.position.count;
-                        var add = Math.floor((scene.timeDifference * moveSpeed * n) / 1000);
+                        var add = Math.floor((_this.scene.timeDifference * moveSpeed * n) / 1000);
                         //console.log(add); 
                         var drawRange = line.geometry.drawRange.start;
                         var max_range = Math.floor(show_range * n);
@@ -513,11 +513,11 @@ var Planet = function(configP, domElement) {
     function fog_contorl() {
         var lengthCam = camera.position.length();
         if (lengthCam > 12) {
-            scene.fog.far = lengthCam;
-            scene.fog.near = lengthCam - (_this.config.planetR / 2);
+            _this.scene.fog.far = lengthCam;
+            _this.scene.fog.near = lengthCam - (_this.config.planetR / 2);
         } else {
-            scene.fog.near = 1;
-            scene.fog.far = 1000;
+            _this.scene.fog.near = 1;
+            _this.scene.fog.far = 1000;
         }
 
         //var lib = THREE.ShaderLib[ "phong" ];
@@ -525,7 +525,7 @@ var Planet = function(configP, domElement) {
     }
 
     function lod_render() {
-        scene.traverse(
+        _this.scene.traverse(
             function(obj) {
                 if (obj instanceof THREE.LOD) {
                     obj.update(camera);
@@ -535,11 +535,11 @@ var Planet = function(configP, domElement) {
     }
 
     function ProssRT_render() {
-        for (var rt in renderTargets) {
-            renderer.clearTarget(renderTargets[rt]);
+        for (var rt in _this.renderTargets) {
+            renderer.clearTarget(_this.renderTargets[rt]);
             //camera.updateProjectionMatrix();
 
-            renderer.render(sceneForRT, camera, renderTargets[rt], false);
+            renderer.render(_this.sceneForRT, camera, _this.renderTargets[rt], false);
         }
     }
 
@@ -745,13 +745,13 @@ var Planet = function(configP, domElement) {
             height = height !== undefined ? height : 0;
         positionMesh(mesh, lola.lo, lola.la, height);
         mesh.name = name;
-        sceneForRT.add(mesh);
+        this.sceneForRT.add(mesh);
     };
     this.addRenderTarget = function(rt, name) {
         if (!(rt instanceof THREE.WebGLRenderTarget))
             return 0;
         var name = name !== undefined ? name : DefaultMeshName;
-        renderTargets[name] = rt;
+        this.renderTargets[name] = rt;
     };
     this.addSingleLine = function(lolaS, lolaE, color) {
         var color = color !== undefined ? color : 0xffffff;
@@ -773,13 +773,13 @@ var Planet = function(configP, domElement) {
     };
     this.romoveMeshFromRT = function(name) {
         var name = name !== undefined ? name : DefaultMeshName;
-        sceneForRT.remove(sceneForRT.getObjectByName(name));
+        this.sceneForRT.remove(this.sceneForRT.getObjectByName(name));
     };
     this.removeRenderTarget = function(name) {
         var name = name !== undefined ? name : DefaultMeshName;
-        for (var rt in renderTargets) {
+        for (var rt in this.renderTargets) {
             if (rt === name) {
-                renderer.clearTarget(renderTargets[rt]);
+                renderer.clearTarget(this.renderTargets[rt]);
                 delete renderTargets[rt];
             }
 
@@ -791,7 +791,7 @@ var Planet = function(configP, domElement) {
     this.addMap = function(data, mapname) {
         var meshMap = makeMapMesh(data);
         meshMap.name = mapname;
-        scene.add(meshMap);
+        this.scene.add(meshMap);
     };
     this.setMouse = function(v) {
         mouse = v;
