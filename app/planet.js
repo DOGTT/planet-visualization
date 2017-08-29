@@ -4,20 +4,19 @@
  * @configP 
  * @domElement
  */
-
+var PlanetLoLa = function(lo, la) {
+    this.lo = lo;
+    this.la = la;
+    //the description of lalo
+    this.loF = null;
+    this.laF = null;
+    this.valid = false;
+};
 var Planet = function(configP, domElement) {
     'use strict';
     if (!Detector.webgl) Detector.addGetWebGLMessage();
     var _this = this;
     this.domElement = (domElement !== undefined) ? domElement : document.body;
-    var LoLa = function(lo, la) {
-        this.lo = lo;
-        this.la = la;
-        //the description of lalo
-        this.loF = null;
-        this.laF = null;
-        this.valid = false;
-    };
     this.config = {
         cloudShow: false,
         textShow: false,
@@ -87,7 +86,7 @@ var Planet = function(configP, domElement) {
     var i, j;
     var mouse = new THREE.Vector2();
     var raycaster, intersects, pointerMesh;
-    var pointerLoLa = new LoLa();
+    var pointerLoLa = new PlanetLoLa();
     this.viewSize = new THREE.Vector2(0, 0);
     this.handleResize = function() {
 
@@ -595,7 +594,7 @@ var Planet = function(configP, domElement) {
     }
 
     function UVconvertTOLoLa(O) {
-        var t = new LoLa();
+        var t = new PlanetLoLa();
         t.lo = (O.x * 360.0 - 180.0).toFixed(4);
         t.la = (O.y * 180.0 - 90.0).toFixed(4);
         return t;
@@ -633,7 +632,7 @@ var Planet = function(configP, domElement) {
         var y = position.y;
         var z = position.z;
         var r = _this.config.planetR;
-        var rt = new LoLa();
+        var rt = new PlanetLoLa();
         rt.lo = Math.abs(Math.atan(z / x) / PI);
         if (x < 0.0) rt.lo = (1.0 - rt.lo);
         if (z > 0.0) rt.lo = 0.0 - rt.lo;
@@ -647,7 +646,7 @@ var Planet = function(configP, domElement) {
 
     function positionMesh(mesh, lo, la, height) {
         var height = height !== undefined ? height : 0;
-        var pos = LoLaconvertToXYZ(new LoLa(lo, la));
+        var pos = LoLaconvertToXYZ(new PlanetLoLa(lo, la));
         var sacl = 1.0 + height;
         mesh.position.set(pos.x * sacl, pos.y * sacl, pos.z * sacl);
         //mesh.lookAt(new THREE.Vector3(0,0,0));   
@@ -680,7 +679,7 @@ var Planet = function(configP, domElement) {
         var vec = new Array();
         var t;
         for (var i = 0; i < arrs.length; i++) {
-            t = LoLaconvertToXYZ(new LoLa(arrs[i][0], arrs[i][1]));
+            t = LoLaconvertToXYZ(new PlanetLoLa(arrs[i][0], arrs[i][1]));
             if (R !== undefined) {
                 for (var v in t) t[v] *= R;
             }
@@ -730,7 +729,7 @@ var Planet = function(configP, domElement) {
     this.addMesh = function(mesh, name, lola, height) {
         if (!(mesh instanceof THREE.Mesh))
             return 0;
-        var lola = lola !== undefined ? lola : new LoLa(0, 0),
+        var lola = lola !== undefined ? lola : new PlanetLoLa(0, 0),
             name = name !== undefined ? name : DefaultMeshName,
             height = height !== undefined ? height : 0;
         positionMesh(mesh, lola.lo, lola.la, height);
@@ -740,7 +739,7 @@ var Planet = function(configP, domElement) {
     this.addMeshToRT = function(mesh, name, lola, height) {
         if (!(mesh instanceof THREE.Mesh))
             return 0;
-        var lola = lola !== undefined ? lola : new LoLa(0, 0),
+        var lola = lola !== undefined ? lola : new PlanetLoLa(0, 0),
             name = name !== undefined ? name : DefaultMeshName,
             height = height !== undefined ? height : 0;
         positionMesh(mesh, lola.lo, lola.la, height);
@@ -755,7 +754,7 @@ var Planet = function(configP, domElement) {
     };
     this.addSingleLine = function(lolaS, lolaE, color) {
         var color = color !== undefined ? color : 0xffffff;
-        if (lolaS instanceof LoLa && lolaE instanceof LoLa) {
+        if (lolaS instanceof PlanetLoLa && lolaE instanceof PlanetLoLa) {
             addLine(lolaS, lolaE, color, true);
         }
     };
@@ -798,7 +797,5 @@ var Planet = function(configP, domElement) {
     };
     this.pointerLoLa = pointerLoLa;
     this.container = this.domElement;
-    this.LoLa = LoLa;
-
 
 };

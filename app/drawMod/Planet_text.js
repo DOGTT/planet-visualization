@@ -7,7 +7,7 @@
          size: 80,
          height: 5,
          curveSegments: 12,
-
+         color: 0xee02ff
      };
      var _this = this;
      var loader = new THREE.FontLoader();
@@ -32,7 +32,6 @@
          var xMid = -0.5 * (geometry.boundingBox.max.x - geometry.boundingBox.min.x);
          console.log(geometry.boundingBox, geometry.boundingBox.min.x, geometry.center());
          tm.scale.x = tm.scale.y = tm.scale.z = 0.001;
-         positionMesh(tm, 146, 25, 0);
-         scene.add(tm);
+         _this.addMesh(tm, Text, new PlanetLoLa(117.5, -22.35), 0.3);
      });
  };

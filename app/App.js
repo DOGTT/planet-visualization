@@ -11,7 +11,7 @@ var App = (function() {
     var planet = new Planet({
         cloudShow: false,
         textShow: false
-    }, container);
+    });
     var mouse = new THREE.Vector2();
     var paramC = {
         RayMarching: false
@@ -58,14 +58,14 @@ var App = (function() {
             let s2 = Math.random() - 0.5;
             let e1 = Math.random() - 0.5;
             let e2 = Math.random() - 0.5;
-            planet.addSingleLine(new planet.LoLa(s1 * 360, s2 * 180), new planet.LoLa(113.59, 22.35), 0xffffff);
+            planet.addSingleLine(new PlanetLoLa(s1 * 360, s2 * 180), new PlanetLoLa(113.59, 22.35), 0xffffff);
         }
         for (let i = 0; i < 50; i++) {
             let s1 = Math.random() - 0.5;
             let s2 = Math.random() - 0.5;
             let e1 = Math.random() - 0.5;
             let e2 = Math.random() - 0.5;
-            planet.addSingleLine(new planet.LoLa(s1 * 360, s2 * 180), new planet.LoLa(-100, -50), 0xffff00);
+            planet.addSingleLine(new PlanetLoLa(s1 * 360, s2 * 180), new PlanetLoLa(-100, -50), 0xffff00);
         }
 
         // planet.addSingleLine(new planet.LoLa(30, 10), new planet.LoLa(100, -10), 0xffff00);
@@ -76,10 +76,10 @@ var App = (function() {
         for (var i = 0; i < 50; i++) {
             for (var j = 0; j < 50; j++) {
                 var cs = new THREE.Mesh(cdsac, cdaca);
-                planet.addMesh(cs, 'test', new planet.LoLa(lons + j * 0.8, lats + i * 0.8), 0.2);
+                planet.addMesh(cs, 'test', new PlanetLoLa(lons + j * 0.8, lats + i * 0.8), 0.2);
             }
         }
-
+        planet.setTextMesh("HI,lt's a test");
 
     }
 
@@ -123,8 +123,8 @@ var App = (function() {
             var meshRT = rayMarch.meshRT;
             mesh.scale.set(0.4, 0.4, 0.4);
             meshRT.scale.set(0.4, 0.4, 0.4);
-            planet.addMesh(mesh, objName.rayMarch, new planet.LoLa(117.5, 22.35), 0.3);
-            planet.addMeshToRT(meshRT, objName.rayMarch, new planet.LoLa(117.5, 22.35), 0.3);
+            planet.addMesh(mesh, objName.rayMarch, new PlanetLoLa(117.5, 22.35), 0.3);
+            planet.addMeshToRT(meshRT, objName.rayMarch, new PlanetLoLa(117.5, 22.35), 0.3);
             planet.addRenderTarget(rayMarch.rtObj, objName.rayMarch);
         });
     }
