@@ -80,7 +80,7 @@ var App = (function() {
             }
         }
         planet.setTextMesh("HI,lt's a test");
-
+        planet.ShowSpark();
     }
 
     function mapLoad() {

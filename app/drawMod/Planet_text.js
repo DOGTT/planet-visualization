@@ -1,4 +1,6 @@
- //text
+ /**
+  * @param str the string show
+  */
  Planet.prototype.setTextMesh = function(str) {
 
      var Text = str || "null String";
@@ -7,7 +9,7 @@
          size: 80,
          height: 5,
          curveSegments: 12,
-         color: 0xee02ff
+         color: 0xffff00
      };
      var _this = this;
      var loader = new THREE.FontLoader();
@@ -25,7 +27,7 @@
              bevelSegments: 5
          });
          var tm = new THREE.Mesh(geometry, new THREE.MeshLambertMaterial({
-             color: 0xee02ff
+             color: _this._fontMeshConfig.color
          }));
          geometry.computeBoundingBox();
 

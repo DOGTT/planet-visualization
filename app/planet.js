@@ -218,8 +218,8 @@ var Planet = function(configP, domElement) {
     }
 
     function addLine(p1, p2, color, dynamic) {
-        var p1 = LoLaconvertToXYZ(p1);
-        var p2 = LoLaconvertToXYZ(p2);
+        var p1 = _this.LoLaconvertToXYZ(p1);
+        var p2 = _this.LoLaconvertToXYZ(p2);
         var high = 0.4,
             pointMount = 40;
         var linePoints = PointToPoint(p1, p2, high, pointMount);
@@ -578,7 +578,7 @@ var Planet = function(configP, domElement) {
             return;
         }
         pointerLoLa.valid = true;
-        var t = UVconvertTOLoLa(O);
+        var t = _this.UVconvertTOLoLa(O);
         var tx = t.lo;
         var ty = t.la;
         var N = _this.config.DirectionText.N || 'N',
@@ -593,21 +593,21 @@ var Planet = function(configP, domElement) {
         pointerLoLa.la = ty;
     }
 
-    function UVconvertTOLoLa(O) {
+    this.UVconvertTOLoLa = function(O) {
         var t = new PlanetLoLa();
         t.lo = (O.x * 360.0 - 180.0).toFixed(4);
         t.la = (O.y * 180.0 - 90.0).toFixed(4);
         return t;
-    }
+    };
 
-    function LoLaconvertTUV(lola) {
+    this.LoLaconvertTUV = function(lola) {
         var t = new THREE.Vector2();
         t.x = (lola.lo + 180.0) / 360.0;
         t.y = (lola.la + 90.0) / 180.0;
         return t;
-    }
+    };
 
-    function LoLaconvertToXYZ(lola) {
+    this.LoLaconvertToXYZ = function(lola) {
         var lo = lola.lo / 180.0;
         var la = lola.la / 180.0;
         var r = _this.config.planetR;
@@ -625,9 +625,9 @@ var Planet = function(configP, domElement) {
         if (lo > 0.0) pos.z = 0.0 - pos.z;
         if (Math.abs(pos.x) < 0.00001) pos.x = 0;
         return pos;
-    }
+    };
 
-    function XYZconvertToLoLa(position) {
+    this.XYZconvertToLoLa = function(position) {
         var x = position.x;
         var y = position.y;
         var z = position.z;
@@ -642,11 +642,11 @@ var Planet = function(configP, domElement) {
         rt.lo *= 180.0;
         rt.la *= 180.0;
         return rt;
-    }
+    };
 
     function positionMesh(mesh, lo, la, height) {
         var height = height !== undefined ? height : 0;
-        var pos = LoLaconvertToXYZ(new PlanetLoLa(lo, la));
+        var pos = _this.LoLaconvertToXYZ(new PlanetLoLa(lo, la));
         var sacl = 1.0 + height;
         mesh.position.set(pos.x * sacl, pos.y * sacl, pos.z * sacl);
         //mesh.lookAt(new THREE.Vector3(0,0,0));   
@@ -679,7 +679,7 @@ var Planet = function(configP, domElement) {
         var vec = new Array();
         var t;
         for (var i = 0; i < arrs.length; i++) {
-            t = LoLaconvertToXYZ(new PlanetLoLa(arrs[i][0], arrs[i][1]));
+            t = _this.LoLaconvertToXYZ(new PlanetLoLa(arrs[i][0], arrs[i][1]));
             if (R !== undefined) {
                 for (var v in t) t[v] *= R;
             }
