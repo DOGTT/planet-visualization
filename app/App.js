@@ -3,14 +3,15 @@
  * Contorl part
  * need update
  */
-var Contorl = (function() {
+var App = (function() {
     'use strict';
     var container = document.createElement('div');
+    container.style.cssText = 'position:fixed;bottom:0px;left:0px;width:500px;height:300px;';
     document.body.appendChild(container);
     var planet = new Planet({
         cloudShow: false,
         textShow: false
-    });
+    }, container);
     var mouse = new THREE.Vector2();
     var paramC = {
         RayMarching: false
