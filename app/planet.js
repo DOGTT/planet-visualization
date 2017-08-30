@@ -112,7 +112,7 @@ var Planet = function(configP, domElement) {
     animate();
 
     //Group
-    var linesGroup, MeshsGroup;
+    var MeshsGroup;
 
     //init function
     function init() {
@@ -174,10 +174,10 @@ var Planet = function(configP, domElement) {
         container.appendChild(stats.dom);
         _this.scene.add(drawAxes(2));
 
-        linesGroup = new THREE.Group();
+
         MeshsGroup = new THREE.Group();
         _this.scene.add(MeshsGroup);
-        _this.scene.add(linesGroup);
+
 
         function keydown(event) {
             if (event.keyCode === 82) {
@@ -437,7 +437,7 @@ var Planet = function(configP, domElement) {
         renderer.render(universeScene, universeCamera);
 
         renderTimeControl();
-        //renderProcessesDeal();
+        renderProcessesDeal();
         renderer.autoClear = false;
         raycaster_render();
         lod_render();
@@ -450,7 +450,13 @@ var Planet = function(configP, domElement) {
     }
 
     function renderProcessesDeal() {
-
+        if (_this.renderProcesses) {
+            for (var prName in _this.renderProcesses) {
+                if (_this.renderProcesses[prName] instanceof Function) {
+                    _this.renderProcesses[prName].call(_this);
+                }
+            }
+        }
     }
 
     function renderTimeControl() {
