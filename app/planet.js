@@ -68,6 +68,7 @@ var Planet = function(configP, domElement) {
     var PI = Math.PI;
     var planetCenter = new THREE.Vector3(0, 0, 0);
     var container, camera, renderer;
+    this.renderProcesses = {};
     this.scene = null;
     //renderTargets
 
@@ -436,16 +437,20 @@ var Planet = function(configP, domElement) {
         renderer.render(universeScene, universeCamera);
 
         renderTimeControl();
-        //
+        //renderProcessesDeal();
         renderer.autoClear = false;
         raycaster_render();
         lod_render();
         //fog_contorl();
         spangleStar_contorl();
         ProssRT_render();
-        lines_render();
+
         renderer.render(_this.scene, camera);
         //renderer.clearColor ();
+    }
+
+    function renderProcessesDeal() {
+
     }
 
     function renderTimeControl() {
@@ -458,25 +463,7 @@ var Planet = function(configP, domElement) {
         }
     }
 
-    function lines_render() {
-        var show_range = 0.5;
-        var moveSpeed = 0.5; //one second move 0.1
-        linesGroup.traverse(
-            function(line) {
-                if (line instanceof THREE.Line) {
-                    if (line.dynamic) {
-                        var n = line.geometry.attributes.position.count;
-                        var add = Math.floor((_this.scene.timeDifference * moveSpeed * n) / 1000);
-                        //console.log(add); 
-                        var drawRange = line.geometry.drawRange.start;
-                        var max_range = Math.floor(show_range * n);
-                        drawRange = add % (n + max_range);
-                        line.geometry.setDrawRange(drawRange - max_range, drawRange);
-                    }
-                }
-            }
-        )
-    }
+
 
     function fog_contorl() {
         var lengthCam = camera.position.length();
