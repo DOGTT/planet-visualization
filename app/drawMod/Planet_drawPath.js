@@ -1,3 +1,3 @@
-var drawPath = function() {
+Planet.prototype.drawPath = function() {
 
 };
