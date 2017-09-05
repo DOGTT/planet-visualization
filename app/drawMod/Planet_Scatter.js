@@ -1,3 +1,6 @@
-var drawScatter = function() {
+/**
+ * @author tideh
+ */
+Planet.prototype.drawScatter = function() {
 
 };
