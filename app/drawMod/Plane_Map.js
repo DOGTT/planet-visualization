@@ -1,6 +1,6 @@
 /**
  * 
  */
-Planet.prototype.AddMap = function(data) {
+Planet.prototype.AddMapData = function(data) {
 
 };
