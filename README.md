@@ -23,5 +23,3 @@ need start chrome with this cmd to debug
 
 add viewControls
 test 
-update in few days
-a tired day ,will update in few day
